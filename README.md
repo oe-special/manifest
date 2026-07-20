@@ -32,8 +32,11 @@ arrow keys move between the stable `pv-nav-locale-*` language controls and
 the account/profile actions such as `pv-nav-sign-in`. OK performs the native
 button or link action instead of being swallowed by the legacy Prime handler.
 `prime_media_keys.js` maps the OpenATV/Dream media-key events missing from the
-legacy Prime keymap. The combined Play/Pause key toggles the active HTML video;
-Stop pauses it and returns from the player while leaving Prime open.
+legacy Prime keymap. It selects Prime's visible player instead of the hidden
+legacy player node. The combined Play/Pause key toggles the active HTML video,
+the transport keys seek by ten seconds, Stop/Exit close the player, and
+Volume+/Volume-/Mute control the web player with the same 175/174/173 key
+codes used by the Netflix adapter.
 `prime_navigation.js` uses Prime's current `data-testid` card and carousel
 attributes for visible RCU focus, horizontal card navigation, vertical row
 navigation and opening the selected title with OK.

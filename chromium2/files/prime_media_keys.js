@@ -1,13 +1,25 @@
 (function () {
 	"use strict";
 
-	var MEDIA_STOP = 0xB2;
+	var KEY_BACKSPACE = 0x08;
+	var KEY_ESCAPE = 0x1B;
+	var BROWSER_BACK = 0xA6;
 	var BROWSER_STOP = 0xA9;
+	var VOLUME_DOWN = 0xAE;
+	var VOLUME_UP = 0xAF;
+	var MEDIA_TRACK_NEXT = 0xB0;
+	var MEDIA_TRACK_PREVIOUS = 0xB1;
+	var MEDIA_STOP = 0xB2;
 	var MEDIA_PLAY_PAUSE = 0xB3;
+	var MEDIA_FAST_FORWARD = 0xE4;
+	var MEDIA_REWIND = 0xE3;
 	var MEDIA_PLAY = 0xE9;
 	var MEDIA_PAUSE = 0xEA;
 	var LEGACY_PLAY = 0xFA;
 	var LEGACY_PAUSE = 0x13;
+	var VOLUME_MUTE = 0xAD;
+	var SEEK_SECONDS = 10;
+	var VOLUME_STEP = 0.05;
 
 	function keyName(event) {
 		return event && (event.key || event.code) || "";
@@ -25,36 +37,61 @@
 		}
 	}
 
+	function isVisible(element) {
+		if (!element) {
+			return false;
+		}
+		var rect = element.getBoundingClientRect();
+		var style = window.getComputedStyle(element);
+		return (
+			rect.width > 0 &&
+			rect.height > 0 &&
+			style.display !== "none" &&
+			style.visibility !== "hidden"
+		);
+	}
+
 	function playerRoot() {
-		return document.querySelector(".dv-player-fullscreen, #dv-web-player");
+		var roots = document.querySelectorAll(
+			".dv-player-fullscreen, [id^=\"dv-web-player\"]"
+		);
+		var i;
+		for (i = 0; i < roots.length; i += 1) {
+			if (isVisible(roots[i])) {
+				return roots[i];
+			}
+		}
+		return null;
 	}
 
 	function isWatching() {
 		return !!playerRoot();
 	}
 
-	function currentVideo() {
-		var videos = document.querySelectorAll("video");
+	function currentVideo(root) {
+		root = root || playerRoot();
+		if (!root) {
+			return null;
+		}
+
+		var videos = root.querySelectorAll("video");
 		var fallback = null;
 		var i;
 		for (i = 0; i < videos.length; i += 1) {
+			if (!isVisible(videos[i])) {
+				continue;
+			}
 			if (!fallback) {
 				fallback = videos[i];
 			}
-			var rect = videos[i].getBoundingClientRect();
-			if (
-				rect.width > 0 &&
-				rect.height > 0 &&
-				videos[i].readyState > 0 &&
-				!videos[i].ended
-			) {
+			if (videos[i].readyState > 0 && !videos[i].ended) {
 				return videos[i];
 			}
 		}
 		return fallback;
 	}
 
-	function logAction(action, keyCode, name) {
+	function logAction(action, keyCode, name, detail) {
 		if (window.console && window.console.log) {
 			window.console.log(
 				"[Prime Media Keys] " +
@@ -62,7 +99,8 @@
 					" key=" +
 					name +
 					" keyCode=" +
-					keyCode
+					keyCode +
+					(detail ? " " + detail : "")
 			);
 		}
 	}
@@ -82,7 +120,8 @@
 	}
 
 	function togglePlayback(video) {
-		if (video.paused || video.ended) {
+		var wasPaused = video.paused || video.ended;
+		if (wasPaused) {
 			play(video);
 			return "play";
 		}
@@ -91,11 +130,13 @@
 	}
 
 	function closeControl(root) {
-		var oldControl = root.querySelector(
+		var control = root.querySelector(
+			"button[aria-label=\"Player schließen\"]," +
+			"button[aria-label=\"Close player\"]," +
 			".closeButtonWrapper .imageButton"
 		);
-		if (oldControl) {
-			return oldControl;
+		if (control && isVisible(control)) {
+			return control;
 		}
 
 		var controls = root.querySelectorAll(
@@ -111,34 +152,52 @@
 				controls[i].getAttribute("title") || "",
 				controls[i].getAttribute("data-testid") || ""
 			].join(" ");
-			if (pattern.test(description)) {
+			if (isVisible(controls[i]) && pattern.test(description)) {
 				return controls[i];
 			}
 		}
 		return null;
 	}
 
-	function stopPlayback(video) {
+	function closePlayer(root, video) {
 		if (video && !video.paused) {
 			video.pause();
 		}
 
-		var root = playerRoot();
 		var control = root && closeControl(root);
 		if (control && control.click) {
 			control.click();
-			window.setTimeout(function () {
-				if (isWatching()) {
-					window.history.back();
-				}
-			}, 400);
-			return;
+			return true;
 		}
 		window.history.back();
+		return false;
+	}
+
+	function seek(video, offset) {
+		var target = video.currentTime + offset;
+		if (target < 0) {
+			target = 0;
+		}
+		if (isFinite(video.duration) && target > video.duration) {
+			target = video.duration;
+		}
+		video.currentTime = target;
+		return target;
+	}
+
+	function changeVolume(video, offset) {
+		var target = Math.round((video.volume + offset) * 100) / 100;
+		target = Math.max(0, Math.min(1, target));
+		video.volume = target;
+		if (offset > 0 && video.muted) {
+			video.muted = false;
+		}
+		return target;
 	}
 
 	function handleKey(event) {
-		if (!isWatching()) {
+		var root = playerRoot();
+		if (!root) {
 			return;
 		}
 
@@ -146,19 +205,67 @@
 		var name = keyName(event);
 		var video;
 		var action;
+		var value;
 
 		if (
 			keyCode === MEDIA_STOP ||
 			keyCode === BROWSER_STOP ||
 			name === "MediaStop"
 		) {
-			if (event.repeat) {
-				consume(event);
+			if (!event.repeat) {
+				video = currentVideo(root);
+				closePlayer(root, video);
+				logAction("stop/close", keyCode, name);
+			}
+			consume(event);
+			return;
+		}
+
+		if (
+			keyCode === KEY_BACKSPACE ||
+			keyCode === BROWSER_BACK ||
+			keyCode === KEY_ESCAPE ||
+			name === "Backspace" ||
+			name === "BrowserBack" ||
+			name === "Escape"
+		) {
+			if (!event.repeat) {
+				video = currentVideo(root);
+				closePlayer(root, video);
+				logAction("exit/close", keyCode, name);
+			}
+			consume(event);
+			return;
+		}
+
+		if (
+			keyCode === MEDIA_TRACK_NEXT ||
+			keyCode === MEDIA_FAST_FORWARD ||
+			name === "MediaTrackNext" ||
+			name === "MediaFastForward"
+		) {
+			video = currentVideo(root);
+			if (!video) {
 				return;
 			}
-			video = currentVideo();
-			stopPlayback(video);
-			logAction("stop", keyCode, name);
+			value = seek(video, SEEK_SECONDS);
+			logAction("seek-forward", keyCode, name, "time=" + value);
+			consume(event);
+			return;
+		}
+
+		if (
+			keyCode === MEDIA_TRACK_PREVIOUS ||
+			keyCode === MEDIA_REWIND ||
+			name === "MediaTrackPrevious" ||
+			name === "MediaRewind"
+		) {
+			video = currentVideo(root);
+			if (!video) {
+				return;
+			}
+			value = seek(video, -SEEK_SECONDS);
+			logAction("seek-backward", keyCode, name, "time=" + value);
 			consume(event);
 			return;
 		}
@@ -173,12 +280,12 @@
 				consume(event);
 				return;
 			}
-			video = currentVideo();
+			video = currentVideo(root);
 			if (!video) {
 				return;
 			}
 			action = togglePlayback(video);
-			logAction(action, keyCode, name);
+			logAction(action, keyCode, name, "paused-before=" + (action === "play"));
 			consume(event);
 			return;
 		}
@@ -188,7 +295,7 @@
 			keyCode === LEGACY_PAUSE ||
 			name === "MediaPause"
 		) {
-			video = currentVideo();
+			video = currentVideo(root);
 			if (!video) {
 				return;
 			}
@@ -199,12 +306,49 @@
 		}
 
 		if (keyCode === LEGACY_PLAY) {
-			video = currentVideo();
+			video = currentVideo(root);
 			if (!video) {
 				return;
 			}
 			play(video);
 			logAction("play", keyCode, name);
+			consume(event);
+			return;
+		}
+
+		if (keyCode === VOLUME_UP || name === "AudioVolumeUp") {
+			video = currentVideo(root);
+			if (!video) {
+				return;
+			}
+			value = changeVolume(video, VOLUME_STEP);
+			logAction("volume-up", keyCode, name, "volume=" + value);
+			consume(event);
+			return;
+		}
+
+		if (keyCode === VOLUME_DOWN || name === "AudioVolumeDown") {
+			video = currentVideo(root);
+			if (!video) {
+				return;
+			}
+			value = changeVolume(video, -VOLUME_STEP);
+			logAction("volume-down", keyCode, name, "volume=" + value);
+			consume(event);
+			return;
+		}
+
+		if (keyCode === VOLUME_MUTE || name === "AudioVolumeMute") {
+			video = currentVideo(root);
+			if (!video) {
+				return;
+			}
+			video.muted = !video.muted;
+			logAction(
+				video.muted ? "mute" : "unmute",
+				keyCode,
+				name
+			);
 			consume(event);
 		}
 	}
@@ -214,5 +358,5 @@
 	}
 	window.__chromiumPrimeMediaKeysInstalled = true;
 	window.addEventListener("keydown", handleKey, true);
-	console.log("[Prime Media Keys] installed");
+	console.log("[Prime Media Keys] installed r16");
 }());
