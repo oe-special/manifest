@@ -37,9 +37,11 @@ legacy player node. The combined Play/Pause key toggles the active HTML video,
 the transport keys seek by ten seconds, Stop/Exit close the player, and
 Volume+/Volume-/Mute control the web player with the same 175/174/173 key
 codes used by the Netflix adapter.
-`prime_navigation.js` uses Prime's current `data-testid` card and carousel
-attributes for visible RCU focus, horizontal card navigation, vertical row
-navigation and opening the selected title with OK.
+`prime_navigation.js` uses Prime's current `data-testid` cards plus standalone
+detail links for visible RCU focus. Vertical navigation follows the tiles'
+actual screen positions instead of DOM container order, so recommendation and
+special rows remain reachable. Left/Right navigate within the visual row and
+OK opens the selected title.
 
 The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
 Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.

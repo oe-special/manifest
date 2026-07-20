@@ -2,6 +2,7 @@
 	"use strict";
 
 	var CARD_SELECTOR = '[data-testid="card"]';
+	var DETAIL_LINK_SELECTOR = 'a[href*="/detail/"]';
 	var ROW_SELECTOR = '[data-testid="card-container-list"]';
 	var FOCUS_CLASS = "chromium-prime-card-focus";
 	var pendingRowFocus = 0;
@@ -13,20 +14,23 @@
 	}
 
 	function playerOpen() {
-		var player = document.querySelector(
+		var players = document.querySelectorAll(
 			".dv-player-fullscreen, #dv-web-player"
 		);
-		if (!player) {
-			return false;
+		var i;
+		for (i = 0; i < players.length; i += 1) {
+			var rect = players[i].getBoundingClientRect();
+			var style = window.getComputedStyle(players[i]);
+			if (
+				rect.width > 0 &&
+				rect.height > 0 &&
+				style.display !== "none" &&
+				style.visibility !== "hidden"
+			) {
+				return true;
+			}
 		}
-		var rect = player.getBoundingClientRect();
-		var style = window.getComputedStyle(player);
-		return !!(
-			rect.width > 0 &&
-			rect.height > 0 &&
-			style.display !== "none" &&
-			style.visibility !== "hidden"
-		);
+		return false;
 	}
 
 	function inputOpen(event) {
@@ -42,13 +46,42 @@
 		);
 	}
 
-	function cardsInRow(row) {
-		if (!row) {
-			return [];
+	function isVisible(element) {
+		if (!element) {
+			return false;
 		}
-		return Array.prototype.slice.call(
-			row.querySelectorAll(CARD_SELECTOR)
-		).sort(function (left, right) {
+		var rect = element.getBoundingClientRect();
+		var style = window.getComputedStyle(element);
+		return (
+			rect.width > 0 &&
+			rect.height > 0 &&
+			style.display !== "none" &&
+			style.visibility !== "hidden"
+		);
+	}
+
+	function allCards() {
+		var cards = Array.prototype.slice.call(
+			document.querySelectorAll(CARD_SELECTOR)
+		).filter(isVisible);
+
+		Array.prototype.forEach.call(
+			document.querySelectorAll(DETAIL_LINK_SELECTOR),
+			function (link) {
+				if (
+					!link.closest(CARD_SELECTOR) &&
+					isVisible(link) &&
+					cards.indexOf(link) < 0
+				) {
+					cards.push(link);
+				}
+			}
+		);
+		return cards;
+	}
+
+	function sortCardsHorizontally(cards) {
+		return cards.sort(function (left, right) {
 			var leftPosition = parseInt(
 				left.getAttribute("data-card-position"),
 				10
@@ -57,19 +90,84 @@
 				right.getAttribute("data-card-position"),
 				10
 			);
-			if (isNaN(leftPosition) || isNaN(rightPosition)) {
-				return 0;
+			if (!isNaN(leftPosition) && !isNaN(rightPosition)) {
+				return leftPosition - rightPosition;
 			}
-			return leftPosition - rightPosition;
+			return (
+				left.getBoundingClientRect().left -
+				right.getBoundingClientRect().left
+			);
 		});
 	}
 
-	function rowsWithCards() {
-		return Array.prototype.slice.call(
-			document.querySelectorAll(ROW_SELECTOR)
-		).filter(function (row) {
-			return cardsInRow(row).length > 0;
+	function cardsInRow(row) {
+		if (!row) {
+			return [];
+		}
+		return sortCardsHorizontally(allCards().filter(function (card) {
+			return row.contains(card);
+		}));
+	}
+
+	function overlapsVertically(left, right) {
+		var leftRect = left.getBoundingClientRect();
+		var rightRect = right.getBoundingClientRect();
+		var overlap = Math.min(leftRect.bottom, rightRect.bottom) -
+			Math.max(leftRect.top, rightRect.top);
+		var minimumHeight = Math.min(leftRect.height, rightRect.height);
+		return overlap > Math.max(8, minimumHeight * 0.35);
+	}
+
+	function cardsForCard(card) {
+		var row = card && card.closest(ROW_SELECTOR);
+		if (row) {
+			return cardsInRow(row);
+		}
+		return sortCardsHorizontally(allCards().filter(function (candidate) {
+			return overlapsVertically(card, candidate);
+		}));
+	}
+
+	function cardLabel(card) {
+		if (!card) {
+			return "card";
+		}
+		return (
+			card.getAttribute("data-card-title") ||
+			card.getAttribute("aria-label") ||
+			(card.querySelector("[aria-label]") &&
+				card.querySelector("[aria-label]").getAttribute("aria-label")) ||
+			(card.textContent || "").trim().slice(0, 80) ||
+			"card"
+		);
+	}
+
+	function cardFromElement(element) {
+		if (!element || !element.closest) {
+			return null;
+		}
+		var card = element.closest(CARD_SELECTOR);
+		if (card) {
+			return card;
+		}
+		var link = element.closest(DETAIL_LINK_SELECTOR);
+		return link && !link.closest(CARD_SELECTOR) ? link : null;
+	}
+
+	function rowCenter(card) {
+		var peers = cardsForCard(card);
+		var top = Infinity;
+		var bottom = -Infinity;
+		peers.forEach(function (peer) {
+			var rect = peer.getBoundingClientRect();
+			top = Math.min(top, rect.top);
+			bottom = Math.max(bottom, rect.bottom);
 		});
+		if (!isFinite(top) || !isFinite(bottom)) {
+			var rect = card.getBoundingClientRect();
+			return rect.top + rect.height / 2;
+		}
+		return top + (bottom - top) / 2;
 	}
 
 	function selectedCard() {
@@ -143,7 +241,7 @@
 		ensureVisible(card);
 		console.log(
 			"[Prime Navigation] focus " +
-				(card.getAttribute("data-card-title") || "card") +
+				cardLabel(card) +
 				" reason=" +
 				reason
 		);
@@ -191,7 +289,7 @@
 
 	function moveHorizontal(card, direction) {
 		var row = card.closest(ROW_SELECTOR);
-		var cards = cardsInRow(row);
+		var cards = cardsForCard(card);
 		var index = cards.indexOf(card);
 		var target = cards[index + direction];
 
@@ -228,12 +326,23 @@
 	}
 
 	function moveVertical(card, direction) {
-		var currentRow = card.closest(ROW_SELECTOR);
-		var rows = rowsWithCards();
-		var rowIndex = rows.indexOf(currentRow);
-		var targetRow = rows[rowIndex + direction];
+		var sourceCards = cardsForCard(card);
+		var sourceRect = card.getBoundingClientRect();
+		var sourceCenterX = sourceRect.left + sourceRect.width / 2;
+		var sourceCenterY = rowCenter(card);
+		var candidates = allCards().filter(function (candidate) {
+			if (sourceCards.indexOf(candidate) >= 0) {
+				return false;
+			}
+			var candidateRect = candidate.getBoundingClientRect();
+			var candidateCenterY =
+				candidateRect.top + candidateRect.height / 2;
+			return direction < 0 ?
+				candidateCenterY < sourceCenterY - 8 :
+				candidateCenterY > sourceCenterY + 8;
+		});
 
-		if (!targetRow) {
+		if (!candidates.length) {
 			if (direction < 0) {
 				clearSelection();
 				var home = document.querySelector(
@@ -250,22 +359,47 @@
 			return true;
 		}
 
-		var sourceRect = card.getBoundingClientRect();
-		var sourceCenter = sourceRect.left + sourceRect.width / 2;
-		var targetCards = cardsInRow(targetRow);
-		var target = targetCards[0];
-		var distance = Infinity;
-
-		targetCards.forEach(function (candidate) {
+		var nearestRowDistance = Infinity;
+		candidates.forEach(function (candidate) {
 			var rect = candidate.getBoundingClientRect();
-			var candidateCenter = rect.left + rect.width / 2;
-			var candidateDistance = Math.abs(candidateCenter - sourceCenter);
-			if (candidateDistance < distance) {
+			var centerY = rect.top + rect.height / 2;
+			var rowDistance = Math.abs(centerY - sourceCenterY);
+			nearestRowDistance = Math.min(
+				nearestRowDistance,
+				rowDistance
+			);
+		});
+
+		var target = null;
+		var horizontalDistance = Infinity;
+		candidates.forEach(function (candidate) {
+			var rect = candidate.getBoundingClientRect();
+			var centerY = rect.top + rect.height / 2;
+			var rowDistance = Math.abs(centerY - sourceCenterY);
+			var sameNearestRow = rowDistance <=
+				nearestRowDistance + Math.max(24, rect.height * 0.35);
+			var candidateCenterX = rect.left + rect.width / 2;
+			var candidateHorizontalDistance =
+				Math.abs(candidateCenterX - sourceCenterX);
+			if (
+				sameNearestRow &&
+				candidateHorizontalDistance < horizontalDistance
+			) {
 				target = candidate;
-				distance = candidateDistance;
+				horizontalDistance = candidateHorizontalDistance;
 			}
 		});
 
+		console.log(
+			"[Prime Navigation] vertical " +
+				(direction < 0 ? "up" : "down") +
+				" from=" +
+				cardLabel(card) +
+				" to=" +
+				cardLabel(target) +
+				" row-distance=" +
+				Math.round(nearestRowDistance)
+		);
 		return focusCard(
 			target,
 			direction < 0 ? "up" : "down"
@@ -273,14 +407,20 @@
 	}
 
 	function openCard(card) {
-		var link = card.querySelector('a[href*="/detail/"]');
-		var control = link || card.querySelector("button[aria-label], a[href]");
+		var link = card.matches && card.matches(DETAIL_LINK_SELECTOR) ?
+			card :
+			card.querySelector(DETAIL_LINK_SELECTOR);
+		var control = link || (
+			card.matches && card.matches("button[aria-label], a[href]") ?
+				card :
+				card.querySelector("button[aria-label], a[href]")
+		);
 		if (!control) {
 			return false;
 		}
 		console.log(
 			"[Prime Navigation] open " +
-				(card.getAttribute("data-card-title") || "card")
+				cardLabel(card)
 		);
 		control.click();
 		return true;
@@ -311,16 +451,23 @@
 		var card = selectedCard();
 		if (!card) {
 			var active = document.activeElement;
+			card = cardFromElement(active);
+			if (card && !focusCard(card, "active-entry")) {
+				return;
+			}
 			var activeRow = active && active.closest ?
 				active.closest(ROW_SELECTOR) :
 				null;
-			if (!activeRow) {
+			if (!card && !activeRow) {
 				return;
 			}
-			card = firstVisibleCard(activeRow);
-			if (!focusCard(card, "row-entry")) {
+			if (
+				!card &&
+				!focusCard(firstVisibleCard(activeRow), "row-entry")
+			) {
 				return;
 			}
+			card = selectedCard();
 		}
 
 		var handled = false;
@@ -364,12 +511,12 @@
 		var style = document.createElement("style");
 		style.id = "chromium-prime-navigation-style";
 		style.textContent =
-			CARD_SELECTOR + "." + FOCUS_CLASS + "{" +
+			"." + FOCUS_CLASS + "{" +
 				"position:relative!important;" +
 				"z-index:100!important;" +
 				"filter:brightness(1.08)!important;" +
 			"}" +
-			CARD_SELECTOR + "." + FOCUS_CLASS + "::after{" +
+			"." + FOCUS_CLASS + "::after{" +
 				"content:\"\"!important;" +
 				"position:absolute!important;" +
 				"inset:0!important;" +
@@ -389,5 +536,5 @@
 	installStyle();
 	window.addEventListener("keydown", handleKey, true);
 	document.addEventListener("focusin", handleRowFocus, true);
-	console.log("[Prime Navigation] installed");
+	console.log("[Prime Navigation] installed r17 spatial");
 }());
