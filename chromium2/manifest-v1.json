@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T15:16:39Z",
+  "generated_utc": "2026-07-20T16:51:07+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -50,6 +50,60 @@
       "mode": "PrimeVideo",
       "requires_cdm": true,
       "icon": "prime_FHD.png"
+    },
+    {
+      "id": "hbo-max",
+      "name": "HBO Max",
+      "description": "HBO Max Deutschland",
+      "url": "https://www.hbomax.com/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "hbomax_FHD.png"
+    },
+    {
+      "id": "paramount-plus",
+      "name": "Paramount+",
+      "description": "Paramount+ Deutschland",
+      "url": "https://www.paramountplus.com/de/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "paramountplus_FHD.png"
+    },
+    {
+      "id": "rtl-plus",
+      "name": "RTL+",
+      "description": "RTL+",
+      "url": "https://plus.rtl.de/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "rtlplus_FHD.png"
+    },
+    {
+      "id": "magenta-tv",
+      "name": "MagentaTV",
+      "description": "MagentaTV 2.0",
+      "url": "https://www.magenta.tv/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "magentatv_FHD.png"
+    },
+    {
+      "id": "apple-tv-plus",
+      "name": "Apple TV+",
+      "description": "Apple TV+",
+      "url": "https://tv.apple.com/de",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "appletv_FHD.png"
+    },
+    {
+      "id": "pluto-tv",
+      "name": "Pluto TV",
+      "description": "Pluto TV",
+      "url": "https://pluto.tv/de/live-tv/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "plutotv_FHD.png"
     }
   ],
   "sites": [
@@ -75,14 +129,20 @@
       "url": "https://www.primevideo.com",
       "scripts": [
         "jquery-3.4.1.min.js",
-        "prime_plugin.js"
+        "prime_language_keys.js",
+        "prime_plugin.js",
+        "prime_navigation.js",
+        "prime_media_keys.js"
       ]
     },
     {
       "url": "https://www.amazon.com",
       "scripts": [
         "jquery-3.4.1.min.js",
-        "prime_plugin.js"
+        "prime_language_keys.js",
+        "prime_plugin.js",
+        "prime_navigation.js",
+        "prime_media_keys.js"
       ]
     },
     {
@@ -178,6 +238,84 @@
       ]
     },
     {
+      "url": "https://www.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://play.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.max.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.max.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.paramountplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.paramountplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://my.plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.magenta.tv",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://web2.magentatv.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://web.magentatv.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://tv.apple.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://idmsa.apple.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
       "url": "https://www.disneyplus.com",
       "scripts": [
         "disney_navigation.js",
@@ -205,6 +343,12 @@
     }
   ],
   "files": [
+    {
+      "name": "appletv_FHD.png",
+      "path": "files/appletv_FHD.png",
+      "size": 4219,
+      "sha256": "fac62672853c23b882f45df13bea9cc7f6e1d3560ba61ebf488d8f076e1afcd4"
+    },
     {
       "name": "bein_plugin.js",
       "path": "files/bein_plugin.js",
@@ -250,14 +394,20 @@
     {
       "name": "disney_navigation.js",
       "path": "files/disney_navigation.js",
-      "size": 4773,
-      "sha256": "c5c1e27f6503179c1d99c6dbccd59ef4db8a3f12f7ae0e3ce50168d586118b34"
+      "size": 7822,
+      "sha256": "6859eb36de7e80b925afa6057cd0e30b03f3b6e1f0f4ad4f02c6cf8a8a47a3c0"
     },
     {
       "name": "dsmartgo_plugin.js",
       "path": "files/dsmartgo_plugin.js",
       "size": 109568,
       "sha256": "519a48b2892fc003cbc44ce6145c7dd18f2fd148b8e041b496be005e525f83c5"
+    },
+    {
+      "name": "hbomax_FHD.png",
+      "path": "files/hbomax_FHD.png",
+      "size": 5761,
+      "sha256": "ef28db268a529fba6b04046a0ebcf407a79cf951b37f1be2fc026631a01a0f33"
     },
     {
       "name": "jquery-3.4.1.min.js",
@@ -276,6 +426,12 @@
       "path": "files/kb2.js",
       "size": 131611,
       "sha256": "28c954defa3c89f20831d12655ba595f1469942c91bc5098c5fa59a7c4fc5f3d"
+    },
+    {
+      "name": "magentatv_FHD.png",
+      "path": "files/magentatv_FHD.png",
+      "size": 5001,
+      "sha256": "d349e6e5c6987fe0211ecd80f9c556e94944f3215c1483cc94762f3737df00fc"
     },
     {
       "name": "mbc_plugin.js",
@@ -320,6 +476,18 @@
       "sha256": "96900d1a19f98cbbbd8cbf7d526b71098543a5d79e7389f27604a5a5cf00c5b1"
     },
     {
+      "name": "paramountplus_FHD.png",
+      "path": "files/paramountplus_FHD.png",
+      "size": 4757,
+      "sha256": "4d29f66231c039a83d301c763871c5e88695cb02f146aa9b1203fc0391eac091"
+    },
+    {
+      "name": "plutotv_FHD.png",
+      "path": "files/plutotv_FHD.png",
+      "size": 3879,
+      "sha256": "82c8bea0b9293cc2f567a1b8685e95b4100c4d4ebf5b9a7484a0b702d7e36dff"
+    },
+    {
       "name": "plutotv_plugin.js",
       "path": "files/plutotv_plugin.js",
       "size": 54315,
@@ -330,6 +498,24 @@
       "path": "files/prime_FHD.png",
       "size": 2606,
       "sha256": "229b3a60e41a810f91cab60c43d6748356b1112415bcee71c5ee168bd30313c6"
+    },
+    {
+      "name": "prime_language_keys.js",
+      "path": "files/prime_language_keys.js",
+      "size": 10455,
+      "sha256": "7a469834d8fa241f05ea937ad3a7bef5075f59e19d3af99d7a9691b47c2a86fd"
+    },
+    {
+      "name": "prime_media_keys.js",
+      "path": "files/prime_media_keys.js",
+      "size": 4379,
+      "sha256": "ac19fc14e0935134c618c981e24bfe0fcd8c29121394e02304ed89314ca71c33"
+    },
+    {
+      "name": "prime_navigation.js",
+      "path": "files/prime_navigation.js",
+      "size": 8881,
+      "sha256": "463d6c1cf7a9a7e1fe01950d3c5bbed2f53f7a548314ff83f93671e1f7d060cb"
     },
     {
       "name": "prime_plugin.js",
@@ -348,6 +534,12 @@
       "path": "files/rcu_plugin.js",
       "size": 10104,
       "sha256": "05bb0f46769276f2f109ffffc6b0960544f6d094943d6eaae2fc5e42c8cfe866"
+    },
+    {
+      "name": "rtlplus_FHD.png",
+      "path": "files/rtlplus_FHD.png",
+      "size": 3249,
+      "sha256": "7536b19657a6fde9e7b949a7ada533a9afc1b31e2266e90963049aab0f068eec"
     },
     {
       "name": "sweettv_plugin.js",

@@ -47,6 +47,60 @@
       "mode": "PrimeVideo",
       "requires_cdm": true,
       "icon": "prime_FHD.png"
+    },
+    {
+      "id": "hbo-max",
+      "name": "HBO Max",
+      "description": "HBO Max Deutschland",
+      "url": "https://www.hbomax.com/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "hbomax_FHD.png"
+    },
+    {
+      "id": "paramount-plus",
+      "name": "Paramount+",
+      "description": "Paramount+ Deutschland",
+      "url": "https://www.paramountplus.com/de/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "paramountplus_FHD.png"
+    },
+    {
+      "id": "rtl-plus",
+      "name": "RTL+",
+      "description": "RTL+",
+      "url": "https://plus.rtl.de/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "rtlplus_FHD.png"
+    },
+    {
+      "id": "magenta-tv",
+      "name": "MagentaTV",
+      "description": "MagentaTV 2.0",
+      "url": "https://www.magenta.tv/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "magentatv_FHD.png"
+    },
+    {
+      "id": "apple-tv-plus",
+      "name": "Apple TV+",
+      "description": "Apple TV+",
+      "url": "https://tv.apple.com/de",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "appletv_FHD.png"
+    },
+    {
+      "id": "pluto-tv",
+      "name": "Pluto TV",
+      "description": "Pluto TV",
+      "url": "https://pluto.tv/de/live-tv/",
+      "mode": "Chrome",
+      "requires_cdm": true,
+      "icon": "plutotv_FHD.png"
     }
   ],
   "sites": [
@@ -72,14 +126,20 @@
       "url": "https://www.primevideo.com",
       "scripts": [
         "jquery-3.4.1.min.js",
-        "prime_plugin.js"
+        "prime_language_keys.js",
+        "prime_plugin.js",
+        "prime_navigation.js",
+        "prime_media_keys.js"
       ]
     },
     {
       "url": "https://www.amazon.com",
       "scripts": [
         "jquery-3.4.1.min.js",
-        "prime_plugin.js"
+        "prime_language_keys.js",
+        "prime_plugin.js",
+        "prime_navigation.js",
+        "prime_media_keys.js"
       ]
     },
     {
@@ -172,6 +232,84 @@
       "url": "https://pluto.tv",
       "scripts": [
         "plutotv_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://play.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.max.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.max.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.paramountplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.paramountplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://my.plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.magenta.tv",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://web2.magentatv.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://web.magentatv.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://tv.apple.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://idmsa.apple.com",
+      "scripts": [
+        "rcu_plugin.js"
       ]
     },
     {

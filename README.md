@@ -24,7 +24,24 @@ The generic `rcu_plugin.js` keeps directional focus inside visible modal
 dialogs and initially selects OneTrust's Accept All/Accept Recommended action.
 `disney_navigation.js` adds the otherwise missing directional transition from
 Disney+'s centered account-creation hero to the Login action in the
-upper-right header.
+upper-right header. On `/identity/` it also exposes Disney's theme variables
+and fade-in keyframes outside unsupported CSS cascade layers, allowing the
+Chromium 92 login form to become visible.
+`prime_language_keys.js` handles Prime Video's current header dropdowns: the
+arrow keys move between the stable `pv-nav-locale-*` language controls and
+the account/profile actions such as `pv-nav-sign-in`. OK performs the native
+button or link action instead of being swallowed by the legacy Prime handler.
+`prime_media_keys.js` maps the OpenATV/Dream media-key events missing from the
+legacy Prime keymap. The combined Play/Pause key toggles the active HTML video;
+Stop pauses it and returns from the player while leaving Prime open.
+`prime_navigation.js` uses Prime's current `data-testid` card and carousel
+attributes for visible RCU focus, horizontal card navigation, vertical row
+navigation and opening the selected title with OK.
+
+The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
+Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
+Only YouTube TV is exposed without Widevine. New services start with the
+generic RCU adapter; Pluto TV retains its dedicated compatibility adapter.
 
 ### Add support for a website
 

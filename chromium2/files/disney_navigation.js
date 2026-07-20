@@ -46,6 +46,78 @@
 		].join(" ").replace(/\s+/g, " ").trim().toLowerCase();
 	}
 
+	function installChromium92LoginCompatibility() {
+		if (window.location.pathname.indexOf("/identity/") === -1 ||
+				document.getElementById("openatv-disney-login-compat"))
+			return;
+		var style = document.createElement("style");
+		style.id = "openatv-disney-login-compat";
+		style.textContent = [
+			"body{",
+			"--background_gradient:radial-gradient(circle at 20% 95%,#056877,#051828 96%);",
+			"--button_primary_default_text:#fff;",
+			"--button_primary_hover_text:#fff;",
+			"--button_primary_active_text:#fff;",
+			"--button_primary_focus_text:#fff;",
+			"--button_primary_default:#30f;",
+			"--button_primary_hover:#2700cd;",
+			"--button_primary_active:#1c00a1;",
+			"--button_primary_focus:#2700cd;",
+			"--button_primary_loading:#30f;",
+			"--button_primary_disabled:#a6b8ff;",
+			"--checkbox_background_checked:#30f;",
+			"--checkbox_border_checked:#30f;",
+			"--media_object_full_border:#e6e8eb;",
+			"--media_object_top_border:#ccced3;",
+			"--toggle_bg_checked:#30f;",
+			"--toggle_bg_checked_hover:#2700cd;",
+			"--toggle_bg_checked_disabled:#c6d6ff;",
+			"}",
+			"div[data-theme='disneyPlus']{",
+			"--button_primary_default:#000;",
+			"--button_primary_hover:#252526;",
+			"--button_primary_active:#000;",
+			"--button_primary_focus:#252526;",
+			"--button_primary_loading:#000;",
+			"--button_primary_disabled:#252526;",
+			"--checkbox_background_checked:#000;",
+			"--checkbox_border_checked:#000;",
+			"}",
+			"@keyframes fade_in{0%{opacity:0}to{opacity:1}}",
+			"@keyframes fade_out{0%{opacity:1}to{opacity:0}}",
+			"@keyframes slide_mobile_container_down{",
+			"0%{padding-bottom:32px;margin-top:0}",
+			"to{padding-bottom:0;margin-top:32px}}",
+			"@keyframes slide_mobile_container_up{",
+			"0%{padding-bottom:0;margin-top:32px}",
+			"to{padding-bottom:32px;margin-top:0}}",
+			"@keyframes slide_secondary_container_down{",
+			"0%{transform:translateY(0)}to{transform:translateY(20px)}}",
+			"@keyframes slide_secondary_container_up{",
+			"0%{transform:translateY(20px)}to{transform:translateY(0)}}",
+			"@keyframes slide_web_container_down{",
+			"0%{transform:translateY(0)}to{transform:translateY(60px)}}",
+			"@keyframes slide_web_container_up{",
+			"0%{transform:translateY(60px)}to{transform:translateY(0)}}",
+			"@keyframes loader_ellipsis_1{",
+			"0%{opacity:0;transform:scale(0)}",
+			"to{opacity:.6;transform:scale(1)}}",
+			"@keyframes loader_ellipsis_2{",
+			"0%{transform:translate(0) scale(1);opacity:.6}",
+			"to{transform:translate(14px) scale(1.25);opacity:1}}",
+			"@keyframes loader_ellipsis_3{",
+			"0%{transform:translate(0) scale(1.5);opacity:1}",
+			"to{transform:translate(16px) scale(1);opacity:.6}}",
+			"@keyframes loader_ellipsis_4{",
+			"0%{transform:scale(1);opacity:.6}",
+			"to{transform:scale(0);opacity:0}}",
+			"@keyframes inputCaret{",
+			"0%,25%{opacity:1}75%,to{opacity:.1}}"
+		].join("");
+		(document.head || document.documentElement).appendChild(style);
+		console.log("[OpenATV Disney Navigation] Chromium 92 login CSS compatibility active");
+	}
+
 	function loginButton() {
 		var elements = Array.prototype.filter.call(
 			document.querySelectorAll("a[href],button,[role='button']"),
@@ -141,6 +213,7 @@
 	}
 
 	// Window capture runs before the generic document-level spatial handler.
+	installChromium92LoginCompatibility();
 	window.addEventListener("keydown", onKeyDown, true);
 	console.log("[OpenATV Disney Navigation] installed");
 }());
