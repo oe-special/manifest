@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T17:30:08+00:00",
+  "generated_utc": "2026-07-20T17:36:56+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -514,8 +514,8 @@
     {
       "name": "prime_navigation.js",
       "path": "files/prime_navigation.js",
-      "size": 12944,
-      "sha256": "e2e0f58ec7f9ea31900ebc9ba97d775629a8b0d7d8d63d2733dc8fb958742290"
+      "size": 15111,
+      "sha256": "674f4f4b672dacbec90d31b3eec2e35865d5576242eda02870ff65b0329ed029"
     },
     {
       "name": "prime_plugin.js",

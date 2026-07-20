@@ -5,7 +5,9 @@
 	var DETAIL_LINK_SELECTOR = 'a[href*="/detail/"]';
 	var ROW_SELECTOR = '[data-testid="card-container-list"]';
 	var FOCUS_CLASS = "chromium-prime-card-focus";
+	var KEY_MENU = 0x5D;
 	var pendingRowFocus = 0;
+	var lastCard = null;
 
 	function consume(event) {
 		event.preventDefault();
@@ -225,6 +227,7 @@
 			return false;
 		}
 
+		lastCard = card;
 		clearSelection();
 		card.classList.add(FOCUS_CLASS);
 		card.setAttribute("data-chromium-rcu-focus", "true");
@@ -246,6 +249,99 @@
 				reason
 		);
 		return true;
+	}
+
+	function menuControl() {
+		var preferred = document.querySelector(
+			'[data-testid="pv-nav-home"]'
+		);
+		if (preferred && isVisible(preferred)) {
+			if (preferred.matches("a[href],button,[tabindex]")) {
+				return preferred;
+			}
+			var preferredControl = preferred.querySelector(
+				"a[href],button,[tabindex]"
+			);
+			if (preferredControl && isVisible(preferredControl)) {
+				return preferredControl;
+			}
+		}
+
+		var candidates = document.querySelectorAll(
+			'header a[href],header button,' +
+			'[data-testid^="pv-nav-"] a[href],' +
+			'[data-testid^="pv-nav-"] button,' +
+			'a[data-testid^="pv-nav-"],button[data-testid^="pv-nav-"]'
+		);
+		var i;
+		for (i = 0; i < candidates.length; i += 1) {
+			if (isVisible(candidates[i])) {
+				return candidates[i];
+			}
+		}
+		return null;
+	}
+
+	function moveToMenu(reason) {
+		var card = selectedCard();
+		if (card) {
+			lastCard = card;
+		}
+		clearSelection();
+
+		var control = menuControl();
+		if (!control) {
+			return false;
+		}
+		try {
+			control.focus({preventScroll: true});
+		} catch (error) {
+			control.focus();
+		}
+		control.scrollIntoView({
+			block: "nearest",
+			inline: "nearest"
+		});
+		console.log("[Prime Navigation] menu reason=" + reason);
+		return true;
+	}
+
+	function firstPageCard() {
+		var cards = allCards();
+		var target = null;
+		var targetTop = Infinity;
+		var targetLeft = Infinity;
+		cards.forEach(function (card) {
+			var rect = card.getBoundingClientRect();
+			if (
+				rect.top < targetTop - 8 ||
+				(Math.abs(rect.top - targetTop) <= 8 &&
+					rect.left < targetLeft)
+			) {
+				target = card;
+				targetTop = rect.top;
+				targetLeft = rect.left;
+			}
+		});
+		return target;
+	}
+
+	function moveToCards(reason) {
+		var card = lastCard;
+		if (!card || !document.documentElement.contains(card) || !isVisible(card)) {
+			card = firstPageCard();
+		}
+		return focusCard(card, reason);
+	}
+
+	function toggleMenu() {
+		if (selectedCard()) {
+			return moveToMenu("menu-key");
+		}
+		if (lastCard && document.documentElement.contains(lastCard)) {
+			return moveToCards("menu-return");
+		}
+		return moveToMenu("menu-key");
 	}
 
 	function visibleAmount(card) {
@@ -344,17 +440,7 @@
 
 		if (!candidates.length) {
 			if (direction < 0) {
-				clearSelection();
-				var home = document.querySelector(
-					'[data-testid="pv-nav-home"]'
-				);
-				if (home && home.focus) {
-					home.focus();
-					home.scrollIntoView({
-						block: "nearest",
-						inline: "nearest"
-					});
-				}
+				moveToMenu("top-row-up");
 			}
 			return true;
 		}
@@ -438,6 +524,18 @@
 		}
 
 		var keyCode = event.which || event.keyCode;
+		var name = event.key || event.code || "";
+		if (
+			keyCode === KEY_MENU ||
+			name === "ContextMenu" ||
+			name === "Menu"
+		) {
+			if (!event.repeat && toggleMenu()) {
+				consume(event);
+			}
+			return;
+		}
+
 		if (
 			keyCode !== 13 &&
 			keyCode !== 37 &&
@@ -536,5 +634,5 @@
 	installStyle();
 	window.addEventListener("keydown", handleKey, true);
 	document.addEventListener("focusin", handleRowFocus, true);
-	console.log("[Prime Navigation] installed r17 spatial");
+	console.log("[Prime Navigation] installed r18 menu-toggle");
 }());

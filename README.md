@@ -41,7 +41,8 @@ codes used by the Netflix adapter.
 detail links for visible RCU focus. Vertical navigation follows the tiles'
 actual screen positions instead of DOM container order, so recommendation and
 special rows remain reachable. Left/Right navigate within the visual row and
-OK opens the selected title.
+OK opens the selected title. The Dream Menu key toggles between the Prime
+header and the last selected tile; Up from the first row enters the header.
 
 The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
 Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
