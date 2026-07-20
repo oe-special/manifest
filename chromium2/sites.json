@@ -60,8 +60,8 @@
     {
       "id": "paramount-plus",
       "name": "Paramount+",
-      "description": "Paramount+ Deutschland",
-      "url": "https://www.paramountplus.com/de/",
+      "description": "Paramount+",
+      "url": "https://www.paramountplus.com/",
       "mode": "Chrome",
       "requires_cdm": true,
       "icon": "paramountplus_FHD.png"
@@ -237,31 +237,44 @@
     {
       "url": "https://www.hbomax.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://play.hbomax.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js",
+        "hbomax_media_keys.js"
       ]
     },
     {
       "url": "https://auth.max.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
+      ]
+    },
+    {
+      "url": "https://auth.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://www.max.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://www.paramountplus.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "paramount_navigation.js"
       ]
     },
     {

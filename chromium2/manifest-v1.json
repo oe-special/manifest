@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T17:46:41+00:00",
+  "generated_utc": "2026-07-20T20:00:48Z",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -63,8 +63,8 @@
     {
       "id": "paramount-plus",
       "name": "Paramount+",
-      "description": "Paramount+ Deutschland",
-      "url": "https://www.paramountplus.com/de/",
+      "description": "Paramount+",
+      "url": "https://www.paramountplus.com/",
       "mode": "Chrome",
       "requires_cdm": true,
       "icon": "paramountplus_FHD.png"
@@ -240,31 +240,44 @@
     {
       "url": "https://www.hbomax.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://play.hbomax.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js",
+        "hbomax_media_keys.js"
       ]
     },
     {
       "url": "https://auth.max.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
+      ]
+    },
+    {
+      "url": "https://auth.hbomax.com",
+      "scripts": [
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://www.max.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "hbomax_navigation.js"
       ]
     },
     {
       "url": "https://www.paramountplus.com",
       "scripts": [
-        "rcu_plugin.js"
+        "rcu_plugin.js",
+        "paramount_navigation.js"
       ]
     },
     {
@@ -410,6 +423,18 @@
       "sha256": "ef28db268a529fba6b04046a0ebcf407a79cf951b37f1be2fc026631a01a0f33"
     },
     {
+      "name": "hbomax_media_keys.js",
+      "path": "files/hbomax_media_keys.js",
+      "size": 6075,
+      "sha256": "d88618b010f9fecec75200631be572a0a3e7025afb84471e3e231ff6fddf7322"
+    },
+    {
+      "name": "hbomax_navigation.js",
+      "path": "files/hbomax_navigation.js",
+      "size": 26138,
+      "sha256": "2eb4cb4174bed1151fc451ac2ab2494fbbe7ba21db613b34e1e37c4ca849a957"
+    },
+    {
       "name": "jquery-3.4.1.min.js",
       "path": "files/jquery-3.4.1.min.js",
       "size": 88147,
@@ -480,6 +505,12 @@
       "path": "files/paramountplus_FHD.png",
       "size": 4757,
       "sha256": "4d29f66231c039a83d301c763871c5e88695cb02f146aa9b1203fc0391eac091"
+    },
+    {
+      "name": "paramount_navigation.js",
+      "path": "files/paramount_navigation.js",
+      "size": 3551,
+      "sha256": "22e618560c44a02278de1f40c7ba70db6636eb77a13c0470db854155604bcf4a"
     },
     {
       "name": "plutotv_FHD.png",

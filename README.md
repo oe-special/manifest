@@ -46,11 +46,36 @@ header and the last selected tile; if no tile was selected yet it enters the
 first real card. Up from the first row enters the header. The current Prime
 header controls are navigated directly with Left/Right instead of relying on
 the legacy handler's obsolete logo/menu structure.
+`hbomax_navigation.js` makes the Dream Menu key toggle between HBO Max page
+content and its current header. Header entry prefers Sign In; Left/Right moves
+between the HBO Max logo, Sign In and Sign Up Now. The current
+`auth.hbomax.com` login origin is supported and its email field is focused
+through HBO's nested Shadow DOM after loading so the virtual keyboard opens.
+Up/Down and OK then navigate and activate the visible login form controls,
+including Continue and the password step. On the signed-in HBO Max browse
+page, only movie tile links participate in navigation: Left/Right stays in
+the current rail, Up/Down chooses the nearest tile in the adjacent rail and
+OK opens the selected title. Movie/show detail pages start on the Play action;
+Left/Right moves only between the hero actions, Down enters recommendations,
+and Up or Menu enters the header. The home-page Continue Watching hero uses
+the same action navigation while its full-surface link is skipped.
+`hbomax_media_keys.js` treats the Dream Play key as a Play/Pause toggle,
+supports a separate Pause key, 10-second Forward/Rewind and Mute. DreamNextGen
+Volume Up/Down remain unconsumed so the native EGL command socket can route
+them to Enigma2's system volume. Stop and Exit leave the HBO Max SPA player
+directly through browser history without first changing the media element
+state.
 
 The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
 Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
 Only YouTube TV is exposed without Widevine. New services start with the
 generic RCU adapter; Pluto TV retains its dedicated compatibility adapter.
+`paramount_navigation.js` replaces Paramount+'s obsolete
+`/account/flow/.../action/login/` target, which returns HTTP 403, with the
+current locale-specific `/<region>/account/signin/` page both before a click
+and after an old login URL was opened. The region is retained from the portal
+URL or referrer instead of being hard-coded. The catalog launches Paramount+
+at its neutral root URL so Paramount can select the correct market worldwide.
 
 ### Add support for a website
 
