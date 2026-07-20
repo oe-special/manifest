@@ -1,0 +1,268 @@
+
+.crclearfix:after {
+	content:" ";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+.crclearfix {
+	zoom:1;
+}
+.crredbtn {
+	width:25px;
+	height:25px;
+	border-radius:5px;
+	background:red;
+	display:inline-block;
+	margin:0 10px 0 20px;
+}
+.crgreenbtn {
+	width:25px;
+	height:25px;
+	border-radius:5px;
+	background:green;
+	display:inline-block;
+	margin:0 10px 0 20px;
+}
+.cryellowbtn {
+	width:25px;
+	height:25px;
+	border-radius:5px;
+	background:yellow;
+	display:inline-block;
+	margin:0 10px 0 20px;
+}
+.crbluebtn {
+	width:25px;
+	height:25px;
+	border-radius:5px;
+	background:blue;
+	display:inline-block;
+	margin:0 10px 0 20px;
+}
+.crkeyboard {
+	width:1280px;
+	height:600px;
+	position:fixed;
+	left:0;
+	top:120px;
+	z-index:3000000000;
+}
+.crkeyboard .crbgdiv {
+	width:inherit;
+	height:inherit;
+	background:#000;
+	opacity:0.8;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:3000000001;
+}
+.crkeyboard .crkeybox {
+	width:1200px;
+	padding:20px 40px;
+	position:absolute;
+	z-index:3000000002;
+	left:0;
+	top:0;
+}
+.crkeyboard .crkeybox .crlangname {
+	padding:0 0 0 6px;
+	height:26px;
+	line-height:26px;
+	font-size:22px;
+	margin:0 0 16px 0;
+	color:#fff
+}
+.crkeyboard .crkeybox .crlangname a {
+	float:right;
+}
+.crkeyboard .crkeybox .crprintbox {
+	height:34px;
+	padding:8px 10px;
+	position:relative;
+}
+.crkeyboard .crkeybox .crprintbox div {
+	width:1200px;
+	height:50px;
+	background:#fff;
+	opacity:0.15;
+	position:absolute;
+	left:0;
+	top:0;
+}
+.crkeyboard .crkeybox .crprintbox span {
+	color:yellow;
+	float:left;
+	font-size:24px;
+}
+.crkeyboard .crkeybox .crprintbox a {
+	width:1px;
+	height:34px;
+	display:inline-block;
+	border-right:1px solid white;
+	float:left;
+}
+.crkeyboard .crkeybox .cr_ul_keybox {
+	width:inherit;
+	padding:10px 0;
+}
+.crkeyboard .crkeybox .cr_ul_keybox li {
+	background:-webkit-gradient(linear,center top,center bottom,from(#666666),to(#444444));
+	text-shadow:1px 0px #fff;
+	border-radius:5px;
+	float:left;
+	font-size:20px;
+	width:96px;
+	height:30px;
+	line-height:30px;
+	display:block;
+	text-align:center;
+	border:1px solid #fff;
+	margin:5px;
+	color:#fff;
+	cursor:pointer;
+}
+.crkeyboard .crkeybox .cr_ul_keybox li.hover {
+	border-radius:5px;
+	background:#4bbeff;
+	color:#000;
+}
+.crkeyboard .crkeybox .crbtnbox {
+	width:inherit;
+	padding:10px 0;
+	height:30px;
+	line-height:30px;
+	font-size:26px;
+	text-align:center;
+	color:#fff;
+}
+
+.crwebsite {
+    width:1280px;
+    height:730px;
+    position:fixed;
+    left:0;
+    top:0px;
+    z-index:3000000003;
+    text-align: center;
+}
+.crwebsite .crwebsite_bgdiv{
+    height:inherit;
+    background:#000;
+    opacity:0.8;
+    position:absolute;
+    top:0;
+    width:100%;
+    z-index:3000000004;
+}
+.crwebsite .crwebsite_input{
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #111;
+    color: #fff;
+    border-radius: 2px 0 0 2px;
+    height: 50px;
+    width: 800px;
+    line-height: 30px;
+    padding: 0 10px;
+    vertical-align: top;
+    font-size: 30px;
+	top:60px;
+	left:180px;
+	position: absolute;
+}
+.crwebsite .crwebsite_btn{
+    background: #4bbeff;
+    border: 0;
+    border-radius: 0 2px 2px 0;
+    height: 50px;
+    width: 70px;
+    color: #fff;
+    vertical-align: top;
+    font-size: 24px;
+    font-style: inherit;
+	top:60px;
+	left:1000px;
+	position: absolute;
+}
+.crwebsite .crwebsite_btn:hover{
+    background: #1B96FF;
+    cursor:pointer;
+}
+
+.crwebsite #crclose_btn {
+	background: #111;
+	color: white;
+	line-height: 30px;
+	text-align: center;
+	height: 30px;
+	width: 30px;
+	font-size: 30px;
+	padding: 1px;
+	top: 15px;
+	left: 1200px;
+	position: absolute;
+}
+
+.crwebsite #crclose_btn::before {
+	content: "✕";
+}
+
+.crwebsite #crclose_btn:hover {
+	background: red;
+}
+
+.crkeyboard .crkeybox .cr_ul_keybox li:hover {
+    border-radius:5px;
+    background:#4bbeff;
+    color:#000;
+}
+
+.crwebsite #crleft_btn {
+	text-align: center;
+	font-size: 30px;
+	height: 50px;
+	width: 50px;
+	color:white;
+	position: absolute;
+	background: rgb(17, 17, 17, 0.9);
+	left: 50px;
+	top: 60px;
+	border-radius:50%;
+	line-height: 50px;
+	background-image:url("http://webportal.dyndns.tv/static/images/left_white.png");
+	background-repeat:no-repeat;
+	background-size: 50% 50%;
+	background-position: 50% 50%;
+}
+
+.crwebsite #crleft_btn:hover {
+	background-color: #1B96FF;
+	cursor: pointer;
+}
+
+.crwebsite #crright_btn {
+	text-align: center;
+	font-size: 30px;
+	height: 50px;
+	width: 50px;
+	color:white;
+	position: absolute;
+	background: rgb(17, 17, 17, 0.9);
+	left: 120px;
+	top: 60px;
+	border-radius:50%;
+	line-height: 50px;
+	background-image:url("http://webportal.dyndns.tv/static/images/right_white.png");
+	background-repeat:no-repeat;
+	background-size: 50% 50%;
+	background-position: 50% 50%;
+
+}
+
+.crwebsite #crright_btn:hover {
+	background-color: #1B96FF;
+	cursor: pointer;
+}

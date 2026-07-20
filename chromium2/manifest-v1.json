@@ -1,0 +1,349 @@
+{
+  "schema": 1,
+  "product": "chromium2-web-controls",
+  "channel": "stable",
+  "generated_utc": "2026-07-20T05:59:37+00:00",
+  "debug_script": "rcu_debug.js",
+  "portals": [
+    {
+      "id": "youtube-tv",
+      "name": "YouTube TV",
+      "description": "YouTube television interface",
+      "url": "https://www.youtube.com/tv",
+      "mode": "YouTubeTV",
+      "requires_cdm": false,
+      "icon": "youtubetv_FHD.png",
+      "user_agent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 4.0.0.2) AppleWebkit/605.1.15 (KHTML, like Gecko) SamsungBrowser/9.2 TV Safari/605.1.15"
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "description": "Netflix",
+      "url": "https://www.netflix.com/",
+      "mode": "Netflix",
+      "requires_cdm": true,
+      "icon": "netflix_FHD.png"
+    },
+    {
+      "id": "disney-plus",
+      "name": "Disney+",
+      "description": "Disney+",
+      "url": "https://www.disneyplus.com/",
+      "mode": "Disney",
+      "requires_cdm": true,
+      "icon": "disney_FHD.png"
+    },
+    {
+      "id": "dazn",
+      "name": "DAZN",
+      "description": "DAZN",
+      "url": "https://www.dazn.com/",
+      "mode": "Dazn",
+      "requires_cdm": true,
+      "icon": "dazn_FHD.png"
+    },
+    {
+      "id": "prime-video",
+      "name": "Prime Video",
+      "description": "Amazon Prime Video",
+      "url": "https://www.primevideo.com/",
+      "mode": "PrimeVideo",
+      "requires_cdm": true,
+      "icon": "prime_FHD.png"
+    }
+  ],
+  "sites": [
+    {
+      "url": "input://",
+      "scripts": [
+        "kb2.js"
+      ],
+      "styles": [
+        "kb.css"
+      ]
+    },
+    {
+      "url": "https://www.netflix.com",
+      "scripts": [
+        "netflix_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.primevideo.com",
+      "scripts": [
+        "jquery-3.4.1.min.js",
+        "prime_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.amazon.com",
+      "scripts": [
+        "jquery-3.4.1.min.js",
+        "prime_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.beinconnect.com.tr",
+      "scripts": [
+        "bein_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.blutv.com",
+      "scripts": [
+        "blutv_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.dsmartgo.com.tr",
+      "scripts": [
+        "dsmartgo_plugin.js"
+      ]
+    },
+    {
+      "url": "https://megogo.net",
+      "scripts": [
+        "megogo_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://sweet.tv",
+      "scripts": [
+        "sweettv_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.tvnow.de",
+      "scripts": [
+        "tvnow_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://my.tvnow.de",
+      "scripts": [
+        "tvnow_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://oll.tv",
+      "scripts": [
+        "oll_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://shahid.mbc.net",
+      "scripts": [
+        "mbc_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://connect.bein.com",
+      "scripts": [
+        "connectbein_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.digiturkplay.com",
+      "scripts": [
+        "digiturk_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.canalplus.com",
+      "scripts": [
+        "canalplus_plugin.js"
+      ]
+    },
+    {
+      "url": "https://compte-canal.canal-plus.com",
+      "scripts": [
+        "canalplus_plugin.js"
+      ]
+    },
+    {
+      "url": "https://pluto.tv",
+      "scripts": [
+        "plutotv_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.disneyplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.disneyplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.dazn.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.joyn.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "name": "bein_plugin.js",
+      "path": "files/bein_plugin.js",
+      "size": 97969,
+      "sha256": "cd67f2106cc095d05cf89950b92be103535c1165b5a45899ad85f4761d08720a"
+    },
+    {
+      "name": "blutv_plugin.js",
+      "path": "files/blutv_plugin.js",
+      "size": 169724,
+      "sha256": "30570e916c4a7aeda2460493e055f6ce8ff98c290d142acad8317fa83cb7c7b3"
+    },
+    {
+      "name": "canalplus_plugin.js",
+      "path": "files/canalplus_plugin.js",
+      "size": 80000,
+      "sha256": "cc3cbfdf3e9d700a6afe33b8659291dc94845cf3fed008adcbe5751ad75fa29a"
+    },
+    {
+      "name": "connectbein_plugin.js",
+      "path": "files/connectbein_plugin.js",
+      "size": 290,
+      "sha256": "7f3eff491ebb7acac19f56cc270a4587e15dd0dca3b581ad77ed5a8ab4df5d66"
+    },
+    {
+      "name": "dazn_FHD.png",
+      "path": "files/dazn_FHD.png",
+      "size": 2645,
+      "sha256": "b1f80afac738bd10c44f04f52bf9de81d6937e636f89f841d7c772c4459614c1"
+    },
+    {
+      "name": "digiturk_plugin.js",
+      "path": "files/digiturk_plugin.js",
+      "size": 96335,
+      "sha256": "e13d4b1287c97d0f2851ae2ea506eab7369463604efab64eb24e13eb37dac24e"
+    },
+    {
+      "name": "disney_FHD.png",
+      "path": "files/disney_FHD.png",
+      "size": 12674,
+      "sha256": "c947536d316babd6d8b18a26dfc59a13616fed4f75ffc448ff22b2587e1b88ec"
+    },
+    {
+      "name": "dsmartgo_plugin.js",
+      "path": "files/dsmartgo_plugin.js",
+      "size": 109568,
+      "sha256": "519a48b2892fc003cbc44ce6145c7dd18f2fd148b8e041b496be005e525f83c5"
+    },
+    {
+      "name": "jquery-3.4.1.min.js",
+      "path": "files/jquery-3.4.1.min.js",
+      "size": 88147,
+      "sha256": "412b8ff9c5ab32b9019fcd84bcd4a54c0e265a14528474f4ee45b27a20abeaeb"
+    },
+    {
+      "name": "kb.css",
+      "path": "files/kb.css",
+      "size": 4999,
+      "sha256": "25bdcf71e424ba46f79a602634ba73e1ec7d426622efd27a5c8fef5cb793a942"
+    },
+    {
+      "name": "kb2.js",
+      "path": "files/kb2.js",
+      "size": 131611,
+      "sha256": "28c954defa3c89f20831d12655ba595f1469942c91bc5098c5fa59a7c4fc5f3d"
+    },
+    {
+      "name": "mbc_plugin.js",
+      "path": "files/mbc_plugin.js",
+      "size": 98513,
+      "sha256": "80b2f2f08e22913b56e137b8b039689e7d312a8e859203c6119fdfc071d26a29"
+    },
+    {
+      "name": "megogo_plugin.js",
+      "path": "files/megogo_plugin.js",
+      "size": 124462,
+      "sha256": "863b28f96a502d47c129a8790782aa1de7972130cc10d15db5bbe986a0dc02fe"
+    },
+    {
+      "name": "netflix_FHD.png",
+      "path": "files/netflix_FHD.png",
+      "size": 3814,
+      "sha256": "c0046eb0d65f68c85e18560132dec2d13aa19f0971dae237fabec181b385e63b"
+    },
+    {
+      "name": "netflix_plugin.js",
+      "path": "files/netflix_plugin.js",
+      "size": 120541,
+      "sha256": "6e256a8935c644a488abb887a6febe889bdfd8275a7a62ecd4abd0d9dc35d2a9"
+    },
+    {
+      "name": "oll_plugin.js",
+      "path": "files/oll_plugin.js",
+      "size": 145332,
+      "sha256": "96900d1a19f98cbbbd8cbf7d526b71098543a5d79e7389f27604a5a5cf00c5b1"
+    },
+    {
+      "name": "plutotv_plugin.js",
+      "path": "files/plutotv_plugin.js",
+      "size": 54315,
+      "sha256": "afd87083862f35e8cc092c2e4849a9f3a6d4cd6fd066325cec2481936f9e68d7"
+    },
+    {
+      "name": "prime_FHD.png",
+      "path": "files/prime_FHD.png",
+      "size": 2606,
+      "sha256": "229b3a60e41a810f91cab60c43d6748356b1112415bcee71c5ee168bd30313c6"
+    },
+    {
+      "name": "prime_plugin.js",
+      "path": "files/prime_plugin.js",
+      "size": 112291,
+      "sha256": "888521fe35e29664687ad9199067a8b736020b9bd571bdda68f681d4baba1fea"
+    },
+    {
+      "name": "rcu_debug.js",
+      "path": "files/rcu_debug.js",
+      "size": 1893,
+      "sha256": "e455692026426f6bafb1741a6957e83d853ef47d244e6c55191aae80de9e124c"
+    },
+    {
+      "name": "rcu_plugin.js",
+      "path": "files/rcu_plugin.js",
+      "size": 7386,
+      "sha256": "9d8d8d02da5613e5b52675603b7e5522dad9f3670a498cf5498a3dc2d1b0a588"
+    },
+    {
+      "name": "sweettv_plugin.js",
+      "path": "files/sweettv_plugin.js",
+      "size": 163811,
+      "sha256": "26ad1db2dce600fa02b32e169a466d6988554ea7cc8ee8361c1a7507e7aedb5d"
+    },
+    {
+      "name": "tvnow_plugin.js",
+      "path": "files/tvnow_plugin.js",
+      "size": 167263,
+      "sha256": "f18f084bbef27460e2c515f74ac4d0d22bfd8da75193428172461f15a3c5614e"
+    },
+    {
+      "name": "youtubetv_FHD.png",
+      "path": "files/youtubetv_FHD.png",
+      "size": 3241,
+      "sha256": "145a72962d56179242540e90b9565fe627b4e2269a12aaf9a29138d23a4cba7b"
+    }
+  ]
+}

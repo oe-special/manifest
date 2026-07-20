@@ -1,0 +1,9 @@
+[attr]payload -diff -merge -text
+
+# Manifest digests are calculated over these exact bytes. Disable line-ending
+# conversion so GitHub Raw serves the same content on every platform.
+chromium2/files/* payload
+
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf

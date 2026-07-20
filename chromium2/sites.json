@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "debug_script": "rcu_debug.js",
+  "portals": [
+    {
+      "id": "youtube-tv",
+      "name": "YouTube TV",
+      "description": "YouTube television interface",
+      "url": "https://www.youtube.com/tv",
+      "mode": "YouTubeTV",
+      "requires_cdm": false,
+      "icon": "youtubetv_FHD.png",
+      "user_agent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 4.0.0.2) AppleWebkit/605.1.15 (KHTML, like Gecko) SamsungBrowser/9.2 TV Safari/605.1.15"
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "description": "Netflix",
+      "url": "https://www.netflix.com/",
+      "mode": "Netflix",
+      "requires_cdm": true,
+      "icon": "netflix_FHD.png"
+    },
+    {
+      "id": "disney-plus",
+      "name": "Disney+",
+      "description": "Disney+",
+      "url": "https://www.disneyplus.com/",
+      "mode": "Disney",
+      "requires_cdm": true,
+      "icon": "disney_FHD.png"
+    },
+    {
+      "id": "dazn",
+      "name": "DAZN",
+      "description": "DAZN",
+      "url": "https://www.dazn.com/",
+      "mode": "Dazn",
+      "requires_cdm": true,
+      "icon": "dazn_FHD.png"
+    },
+    {
+      "id": "prime-video",
+      "name": "Prime Video",
+      "description": "Amazon Prime Video",
+      "url": "https://www.primevideo.com/",
+      "mode": "PrimeVideo",
+      "requires_cdm": true,
+      "icon": "prime_FHD.png"
+    }
+  ],
+  "sites": [
+    {
+      "url": "input://",
+      "scripts": [
+        "kb2.js"
+      ],
+      "styles": [
+        "kb.css"
+      ]
+    },
+    {
+      "url": "https://www.netflix.com",
+      "scripts": [
+        "netflix_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.primevideo.com",
+      "scripts": [
+        "jquery-3.4.1.min.js",
+        "prime_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.amazon.com",
+      "scripts": [
+        "jquery-3.4.1.min.js",
+        "prime_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.beinconnect.com.tr",
+      "scripts": [
+        "bein_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.blutv.com",
+      "scripts": [
+        "blutv_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.dsmartgo.com.tr",
+      "scripts": [
+        "dsmartgo_plugin.js"
+      ]
+    },
+    {
+      "url": "https://megogo.net",
+      "scripts": [
+        "megogo_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://sweet.tv",
+      "scripts": [
+        "sweettv_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.tvnow.de",
+      "scripts": [
+        "tvnow_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://my.tvnow.de",
+      "scripts": [
+        "tvnow_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://oll.tv",
+      "scripts": [
+        "oll_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://shahid.mbc.net",
+      "scripts": [
+        "mbc_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://connect.bein.com",
+      "scripts": [
+        "connectbein_plugin.js",
+        "jquery-3.4.1.min.js"
+      ]
+    },
+    {
+      "url": "https://www.digiturkplay.com",
+      "scripts": [
+        "digiturk_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.canalplus.com",
+      "scripts": [
+        "canalplus_plugin.js"
+      ]
+    },
+    {
+      "url": "https://compte-canal.canal-plus.com",
+      "scripts": [
+        "canalplus_plugin.js"
+      ]
+    },
+    {
+      "url": "https://pluto.tv",
+      "scripts": [
+        "plutotv_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.disneyplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.disneyplus.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.dazn.com",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://www.joyn.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    }
+  ]
+}
