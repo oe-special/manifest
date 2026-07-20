@@ -177,12 +177,14 @@
     {
       "url": "https://www.disneyplus.com",
       "scripts": [
+        "disney_navigation.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://auth.disneyplus.com",
       "scripts": [
+        "disney_navigation.js",
         "rcu_plugin.js"
       ]
     },

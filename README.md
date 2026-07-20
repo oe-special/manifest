@@ -22,6 +22,9 @@ Netflix uses two small compatibility adapters after its legacy handler:
 Gameplay remains controlled by Netflix's phone/tablet controller.
 The generic `rcu_plugin.js` keeps directional focus inside visible modal
 dialogs and initially selects OneTrust's Accept All/Accept Recommended action.
+`disney_navigation.js` adds the otherwise missing directional transition from
+Disney+'s centered account-creation hero to the Login action in the
+upper-right header.
 
 ### Add support for a website
 
