@@ -13,7 +13,20 @@
 	}
 
 	function playerOpen() {
-		return !!document.querySelector(".dv-player-fullscreen, #dv-web-player");
+		var player = document.querySelector(
+			".dv-player-fullscreen, #dv-web-player"
+		);
+		if (!player) {
+			return false;
+		}
+		var rect = player.getBoundingClientRect();
+		var style = window.getComputedStyle(player);
+		return !!(
+			rect.width > 0 &&
+			rect.height > 0 &&
+			style.display !== "none" &&
+			style.visibility !== "hidden"
+		);
 	}
 
 	function inputOpen(event) {
