@@ -6,6 +6,8 @@
 	var MEDIA_NEXT_TRACK = 0xB0;
 	var MEDIA_PREVIOUS_TRACK = 0xB1;
 	var MEDIA_PLAY_PAUSE = 0xB3;
+	var MEDIA_PLAY = 0xE9;
+	var MEDIA_PAUSE = 0xEA;
 	var PLAY = 0xFA;
 	var PAUSE = 0x13;
 	var FAST_FORWARD = 0xE4;
@@ -32,6 +34,16 @@
 		return api && typeof api.is_watching === "function" && api.is_watching();
 	}
 
+	function keyName(event) {
+		return event && (event.key || event.code) || "";
+	}
+
+	function logAction(action, keyCode, name) {
+		if (window.console && typeof window.console.log === "function")
+			window.console.log("[OpenATV Media Keys] " + action +
+				" key=" + name + " keyCode=" + keyCode);
+	}
+
 	function install() {
 		var api = window.netflix_api;
 		if (!api || typeof api.event_handler !== "function") {
@@ -46,45 +58,60 @@
 		var originalEventHandler = api.event_handler;
 		api.event_handler = function (event) {
 			var keyCode = event && (event.which || event.keyCode);
+			var name = keyName(event);
 			var application;
 
-			if (keyCode === MEDIA_STOP || keyCode === BROWSER_STOP) {
+			if (keyCode === MEDIA_STOP || keyCode === BROWSER_STOP ||
+					name === "MediaStop") {
 				application = currentApplication(this);
 				if (application && typeof application.event_exit === "function") {
 					application.event_exit();
+					logAction("stop", keyCode, name);
 					consume(event);
 					return;
 				}
 			}
 
 			if (keyCode === MEDIA_PLAY_PAUSE ||
-					keyCode === PLAY || keyCode === PAUSE) {
+					keyCode === MEDIA_PLAY || keyCode === MEDIA_PAUSE ||
+					keyCode === PLAY || keyCode === PAUSE ||
+					name === "MediaPlay" || name === "MediaPause" ||
+					name === "MediaPlayPause") {
+				if (event && event.repeat) {
+					consume(event);
+					return;
+				}
 				application = currentApplication(this);
 				if (isWatching(this) && application &&
 						typeof application.event_ok === "function") {
 					// Netflix's current player still handles the normal OK path,
 					// while its legacy synthetic Enter handler no longer does.
 					application.event_ok();
+					logAction("play/pause", keyCode, name);
 					consume(event);
 					return;
 				}
 			}
 
-			if (keyCode === MEDIA_NEXT_TRACK || keyCode === FAST_FORWARD) {
+			if (keyCode === MEDIA_NEXT_TRACK || keyCode === FAST_FORWARD ||
+					name === "MediaTrackNext" || name === "MediaFastForward") {
 				application = currentApplication(this);
 				if (isWatching(this) && application &&
 						typeof application.event_forward === "function") {
 					application.event_forward();
+					logAction("fast-forward", keyCode, name);
 					consume(event);
 					return;
 				}
 			}
 
-			if (keyCode === MEDIA_PREVIOUS_TRACK || keyCode === REWIND) {
+			if (keyCode === MEDIA_PREVIOUS_TRACK || keyCode === REWIND ||
+					name === "MediaTrackPrevious" || name === "MediaRewind") {
 				application = currentApplication(this);
 				if (isWatching(this) && application &&
 						typeof application.event_backward === "function") {
 					application.event_backward();
+					logAction("rewind", keyCode, name);
 					consume(event);
 					return;
 				}

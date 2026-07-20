@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T13:13:47+00:00",
+  "generated_utc": "2026-07-20T13:48:32+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -289,8 +289,8 @@
     {
       "name": "netflix_media_keys.js",
       "path": "files/netflix_media_keys.js",
-      "size": 2713,
-      "sha256": "5c1750465b48caf365dc3d3fc4da7a0e6c8161e58330e09726431d5af0d21575"
+      "size": 3640,
+      "sha256": "6af1bd41201b9c883b58e96e31518185ea2872574926c8db5ad8d3ffb920d09a"
     },
     {
       "name": "netflix_plugin.js",
