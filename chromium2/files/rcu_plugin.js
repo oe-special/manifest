@@ -6,7 +6,7 @@
     }
 
     window.__chromiumRcuPlugin = {
-        version: "1.0.0",
+        version: "1.0.1",
         date: "2026-07-20"
     };
 
@@ -52,8 +52,56 @@
             parseFloat(css.opacity || "1") > 0.01;
     }
 
+    function activeModal() {
+        var modalSelectors = [
+            "#onetrust-pc-sdk",
+            "#onetrust-banner-sdk",
+            "[aria-modal='true']"
+        ];
+        for (var index = 0; index < modalSelectors.length; index++) {
+            var elements = document.querySelectorAll(modalSelectors[index]);
+            for (var elementIndex = 0; elementIndex < elements.length; elementIndex++) {
+                if (visible(elements[elementIndex])) {
+                    return elements[elementIndex];
+                }
+            }
+        }
+        return null;
+    }
+
     function candidates() {
-        return Array.prototype.filter.call(document.querySelectorAll(selector), visible);
+        var root = activeModal() || document;
+        return Array.prototype.filter.call(root.querySelectorAll(selector), visible);
+    }
+
+    function preferredConsentButton(items) {
+        var root = activeModal();
+        if (!root) {
+            return null;
+        }
+        var preferredSelectors = [
+            "#onetrust-accept-btn-handler",
+            "#accept-recommended-btn-handler",
+            "#save-preference-btn-handler"
+        ];
+        for (var index = 0; index < preferredSelectors.length; index++) {
+            var preferred = root.querySelector(preferredSelectors[index]);
+            if (preferred && visible(preferred) && items.indexOf(preferred) !== -1) {
+                return preferred;
+            }
+        }
+        var acceptWords = /(accept all|allow all|accept recommended|alle akzeptieren|alles akzeptieren|zustimmen)/i;
+        for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+            var label = [
+                items[itemIndex].getAttribute("aria-label") || "",
+                items[itemIndex].innerText || "",
+                items[itemIndex].textContent || ""
+            ].join(" ");
+            if (acceptWords.test(label)) {
+                return items[itemIndex];
+            }
+        }
+        return null;
     }
 
     function focusElement(element) {
@@ -83,11 +131,16 @@
 
     function currentElement(items) {
         var active = document.activeElement;
-        if (active && active !== document.body && active !== document.documentElement && visible(active)) {
+        if (active && items.indexOf(active) !== -1 && visible(active)) {
             return active;
         }
         if (!items.length) {
             return null;
+        }
+        var preferred = preferredConsentButton(items);
+        if (preferred) {
+            focusElement(preferred);
+            return preferred;
         }
         items.sort(function (a, b) {
             var ar = a.getBoundingClientRect();
@@ -150,9 +203,9 @@
     }
 
     function activate() {
-        var active = document.activeElement;
-        if (!active || active === document.body || active === document.documentElement) {
-            return focusElement(currentElement(candidates()));
+        var active = currentElement(candidates());
+        if (!active) {
+            return false;
         }
         if (active.tagName === "VIDEO") {
             active.paused ? active.play() : active.pause();
@@ -183,23 +236,31 @@
         var code = event.keyCode || event.which;
         var handled = false;
         var active = document.activeElement;
+        var modal = activeModal();
 
         if (!editable(active) || event.key.indexOf("Arrow") === 0) {
             if (event.key === "ArrowLeft" || code === 37) {
-                handled = move("left");
+                handled = move("left") || Boolean(modal);
             } else if (event.key === "ArrowUp" || code === 38) {
-                handled = move("up");
+                handled = move("up") || Boolean(modal);
             } else if (event.key === "ArrowRight" || code === 39) {
-                handled = move("right");
+                handled = move("right") || Boolean(modal);
             } else if (event.key === "ArrowDown" || code === 40) {
-                handled = move("down");
+                handled = move("down") || Boolean(modal);
             }
         }
 
         if (event.key === "Enter" || code === 13) {
             handled = activate();
         } else if (event.key === "Escape" || event.key === "BrowserBack" || code === 27 || code === 166) {
-            window.history.back();
+            var closeButton = modal && modal.querySelector(
+                "#close-pc-btn-handler,.ot-close-icon,[aria-label*='close' i]"
+            );
+            if (closeButton && visible(closeButton)) {
+                closeButton.click();
+            } else if (!modal) {
+                window.history.back();
+            }
             handled = true;
         } else if (event.key === "MediaPlayPause" || code === 179 || code === 19 || code === 250) {
             var video = document.querySelector("video");
@@ -226,9 +287,28 @@
         }
     }, true);
 
+    var focusedModal = null;
+    function focusNewModal() {
+        var modal = activeModal();
+        if (!modal) {
+            focusedModal = null;
+            return;
+        }
+        if (modal === focusedModal) {
+            return;
+        }
+        focusedModal = modal;
+        var items = candidates();
+        focusElement(preferredConsentButton(items) || currentElement(items));
+    }
+
+    window.setInterval(focusNewModal, 500);
     window.setTimeout(function () {
-        currentElement(candidates());
+        focusNewModal();
+        if (!activeModal()) {
+            currentElement(candidates());
+        }
     }, 1200);
 
-    console.log("[Chromium RCU] generic plugin 1.0.0 active on " + location.origin);
+    console.log("[Chromium RCU] generic plugin 1.0.1 active on " + location.origin);
 }());

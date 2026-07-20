@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T14:38:46Z",
+  "generated_utc": "2026-07-20T15:05:25Z",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -338,8 +338,8 @@
     {
       "name": "rcu_plugin.js",
       "path": "files/rcu_plugin.js",
-      "size": 7386,
-      "sha256": "9d8d8d02da5613e5b52675603b7e5522dad9f3670a498cf5498a3dc2d1b0a588"
+      "size": 10104,
+      "sha256": "05bb0f46769276f2f109ffffc6b0960544f6d094943d6eaae2fc5e42c8cfe866"
     },
     {
       "name": "sweettv_plugin.js",

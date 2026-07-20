@@ -20,6 +20,8 @@ Netflix uses two small compatibility adapters after its legacy handler:
 `netflix_media_keys.js` for player transport keys and
 `netflix_games_keys.js` for the Continue/Resume overlay on `/play-game/`.
 Gameplay remains controlled by Netflix's phone/tablet controller.
+The generic `rcu_plugin.js` keeps directional focus inside visible modal
+dialogs and initially selects OneTrust's Accept All/Accept Recommended action.
 
 ### Add support for a website
 
