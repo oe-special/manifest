@@ -8,6 +8,7 @@
 	var KEY_MENU = 0x5D;
 	var pendingRowFocus = 0;
 	var lastCard = null;
+	var inHeaderMenu = false;
 
 	function consume(event) {
 		event.preventDefault();
@@ -227,6 +228,7 @@
 			return false;
 		}
 
+		inHeaderMenu = false;
 		lastCard = card;
 		clearSelection();
 		card.classList.add(FOCUS_CLASS);
@@ -267,6 +269,20 @@
 			}
 		}
 
+		var modernControls = document.querySelectorAll(
+			"a.SNxr4G[href],button.SNxr4G"
+		);
+		var modernIndex;
+		for (
+			modernIndex = 0;
+			modernIndex < modernControls.length;
+			modernIndex += 1
+		) {
+			if (isVisible(modernControls[modernIndex])) {
+				return modernControls[modernIndex];
+			}
+		}
+
 		var candidates = document.querySelectorAll(
 			'header a[href],header button,' +
 			'[data-testid^="pv-nav-"] a[href],' +
@@ -282,6 +298,91 @@
 		return null;
 	}
 
+	function headerControls() {
+		var controls = Array.prototype.slice.call(
+			document.querySelectorAll(
+				"a.SNxr4G[href],button.SNxr4G," +
+				'[data-testid^="pv-nav-"] a[href],' +
+				'[data-testid^="pv-nav-"] button,' +
+				'a[data-testid^="pv-nav-"],' +
+				'button[data-testid^="pv-nav-"]'
+			)
+		).filter(isVisible);
+
+		if (!controls.length) {
+			controls = Array.prototype.slice.call(
+				document.querySelectorAll(
+					"header a[href],header button," +
+					"nav a[href],nav button," +
+					'[role="navigation"] a[href],' +
+					'[role="navigation"] button'
+				)
+			).filter(isVisible);
+		}
+
+		return controls.filter(function (control, index) {
+			return controls.indexOf(control) === index;
+		}).sort(function (left, right) {
+			var leftRect = left.getBoundingClientRect();
+			var rightRect = right.getBoundingClientRect();
+			return (
+				(leftRect.left + leftRect.width / 2) -
+				(rightRect.left + rightRect.width / 2)
+			);
+		});
+	}
+
+	function focusHeaderControl(control, reason) {
+		if (!control) {
+			return false;
+		}
+		try {
+			control.focus({preventScroll: true});
+		} catch (error) {
+			control.focus();
+		}
+		inHeaderMenu = true;
+		console.log(
+			"[Prime Navigation] header focus " +
+				cardLabel(control) +
+				" reason=" +
+				reason
+		);
+		return true;
+	}
+
+	function moveHeader(direction) {
+		var controls = headerControls();
+		if (!controls.length) {
+			return false;
+		}
+
+		var active = document.activeElement;
+		var index = controls.indexOf(active);
+		if (index < 0) {
+			controls.some(function (control, controlIndex) {
+				if (control.contains(active) || active.contains(control)) {
+					index = controlIndex;
+					return true;
+				}
+				return false;
+			});
+		}
+		if (index < 0) {
+			index = direction > 0 ? -1 : controls.length;
+		}
+
+		var targetIndex = index + direction;
+		targetIndex = Math.max(
+			0,
+			Math.min(controls.length - 1, targetIndex)
+		);
+		return focusHeaderControl(
+			controls[targetIndex],
+			direction < 0 ? "header-left" : "header-right"
+		);
+	}
+
 	function moveToMenu(reason) {
 		var card = selectedCard();
 		if (card) {
@@ -293,11 +394,7 @@
 		if (!control) {
 			return false;
 		}
-		try {
-			control.focus({preventScroll: true});
-		} catch (error) {
-			control.focus();
-		}
+		focusHeaderControl(control, reason);
 		control.scrollIntoView({
 			block: "nearest",
 			inline: "nearest"
@@ -543,6 +640,16 @@
 		}
 
 		if (
+			inHeaderMenu &&
+			(keyCode === 37 || keyCode === 39)
+		) {
+			if (moveHeader(keyCode === 37 ? -1 : 1)) {
+				consume(event);
+			}
+			return;
+		}
+
+		if (
 			keyCode !== 13 &&
 			keyCode !== 37 &&
 			keyCode !== 38 &&
@@ -640,5 +747,5 @@
 	installStyle();
 	window.addEventListener("keydown", handleKey, true);
 	document.addEventListener("focusin", handleRowFocus, true);
-	console.log("[Prime Navigation] installed r19 menu-return");
+	console.log("[Prime Navigation] installed r20 header-navigation");
 }());

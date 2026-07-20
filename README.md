@@ -43,7 +43,9 @@ actual screen positions instead of DOM container order, so recommendation and
 special rows remain reachable. Left/Right navigate within the visual row and
 OK opens the selected title. The Dream Menu key toggles between the Prime
 header and the last selected tile; if no tile was selected yet it enters the
-first real card. Up from the first row enters the header.
+first real card. Up from the first row enters the header. The current Prime
+header controls are navigated directly with Left/Right instead of relying on
+the legacy handler's obsolete logo/menu structure.
 
 The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
 Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
