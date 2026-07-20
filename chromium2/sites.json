@@ -64,7 +64,8 @@
       "scripts": [
         "netflix_plugin.js",
         "jquery-3.4.1.min.js",
-        "netflix_media_keys.js"
+        "netflix_media_keys.js",
+        "netflix_games_keys.js"
       ]
     },
     {

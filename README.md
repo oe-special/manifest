@@ -16,6 +16,11 @@ contains:
 The receiver downloads every referenced file into a staging directory,
 verifies all files, and only then replaces its local web controls.
 
+Netflix uses two small compatibility adapters after its legacy handler:
+`netflix_media_keys.js` for player transport keys and
+`netflix_games_keys.js` for the Continue/Resume overlay on `/play-game/`.
+Gameplay remains controlled by Netflix's phone/tablet controller.
+
 ### Add support for a website
 
 1. Add a site-specific JavaScript file to `chromium2/files/`. If generic

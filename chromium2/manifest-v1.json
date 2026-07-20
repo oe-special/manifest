@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-20T13:48:32+00:00",
+  "generated_utc": "2026-07-20T14:38:46Z",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -67,7 +67,8 @@
       "scripts": [
         "netflix_plugin.js",
         "jquery-3.4.1.min.js",
-        "netflix_media_keys.js"
+        "netflix_media_keys.js",
+        "netflix_games_keys.js"
       ]
     },
     {
@@ -285,6 +286,12 @@
       "path": "files/netflix_FHD.png",
       "size": 3814,
       "sha256": "c0046eb0d65f68c85e18560132dec2d13aa19f0971dae237fabec181b385e63b"
+    },
+    {
+      "name": "netflix_games_keys.js",
+      "path": "files/netflix_games_keys.js",
+      "size": 5746,
+      "sha256": "8d43382ade795265af6913b53071cb4b0cab9eda74a823bdf4810d9a99408fbf"
     },
     {
       "name": "netflix_media_keys.js",
