@@ -308,6 +308,12 @@
 
 	function firstPageCard() {
 		var cards = allCards();
+		var standardCards = cards.filter(function (card) {
+			return card.matches(CARD_SELECTOR);
+		});
+		if (standardCards.length) {
+			cards = standardCards;
+		}
 		var target = null;
 		var targetTop = Infinity;
 		var targetLeft = Infinity;
@@ -338,8 +344,8 @@
 		if (selectedCard()) {
 			return moveToMenu("menu-key");
 		}
-		if (lastCard && document.documentElement.contains(lastCard)) {
-			return moveToCards("menu-return");
+		if (moveToCards("menu-return")) {
+			return true;
 		}
 		return moveToMenu("menu-key");
 	}
@@ -634,5 +640,5 @@
 	installStyle();
 	window.addEventListener("keydown", handleKey, true);
 	document.addEventListener("focusin", handleRowFocus, true);
-	console.log("[Prime Navigation] installed r18 menu-toggle");
+	console.log("[Prime Navigation] installed r19 menu-return");
 }());
