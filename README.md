@@ -71,11 +71,48 @@ Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
 Only YouTube TV is exposed without Widevine. New services start with the
 generic RCU adapter; Pluto TV retains its dedicated compatibility adapter.
 `paramount_navigation.js` replaces Paramount+'s obsolete
-`/account/flow/.../action/login/` target, which returns HTTP 403, with the
+`/[region]/account/flow/.../action/login/` target (also accepted without a
+region), which returns HTTP 403, with the
 current locale-specific `/<region>/account/signin/` page both before a click
 and after an old login URL was opened. The region is retained from the portal
 URL or referrer instead of being hard-coded. The catalog launches Paramount+
 at its neutral root URL so Paramount can select the correct market worldwide.
+The selected market is stored locally and restored when Paramount drops the
+locale prefix after sign-in, for example by turning `/home/` back into the
+previously selected `/<region>/home/`. When that storage is not available, the
+adapter derives the market from Chromium's language, which the plugin seeds
+from the OpenATV Enigma2 language through `--lang`. A per-target loop guard
+prevents repeated redirects if Paramount rejects a regional content URL.
+On the signed-in home page, the newsletter opt-in modal locks RCU focus to its
+checkbox, policy link and Yes/No buttons; background tiles cannot steal focus,
+and Exit safely activates No to dismiss the dialog.
+The dated `paramount_browse_navigation_*.js` adapter separates Paramount's
+header from its movie
+rails. The Dream Menu key toggles between the header and the last selected
+movie tile, Left/Right stays in the visual rail, and Up/Down selects the
+nearest tile in the adjacent rail. The selected tile receives an explicit TV
+focus frame instead of relying on Paramount's inconsistent browser focus.
+The home-page hero controls, including the carousel Pause button and its
+primary action, form a navigation row between the header and the first movie
+rail instead of being skipped.
+On show and movie detail pages, the same Menu toggle waits for and returns to
+the visible Play/Resume and Watchlist hero actions before episodes or
+recommendations. OK explicitly opens the profile menu and hands its first
+visible entry to normal navigation. Only Paramount's primary header controls
+participate in header navigation, so profile-dropdown entries cannot trap
+Left/Right focus.
+Paramount video pages use a separate navigation state machine for the player,
+season selector, open season menu and episode rows. This prevents the generic
+spatial scanner from mixing player controls, header links and episode cards;
+selecting a season returns focus to its first episode, while Left/Back closes
+the season menu without leaving the page.
+Paramount+ uses a Windows Chrome 92 user agent matching the actual browser
+engine. The earlier LG webOS identifier made login available but selected
+Paramount's Smart-TV player path, which expects native platform integration
+that this standalone Chromium does not provide. The engine-matched desktop
+agent keeps the normal web player and also avoids the contradictory Chrome 131
+/ Chromium 92 fingerprint that can trigger bot protection. The newer default
+Chrome agent remains available to Netflix.
 
 ### Add support for a website
 

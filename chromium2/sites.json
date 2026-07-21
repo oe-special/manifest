@@ -64,7 +64,8 @@
       "url": "https://www.paramountplus.com/",
       "mode": "Chrome",
       "requires_cdm": true,
-      "icon": "paramountplus_FHD.png"
+      "icon": "paramountplus_FHD.png",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.162 Safari/537.36"
     },
     {
       "id": "rtl-plus",
@@ -273,8 +274,10 @@
     {
       "url": "https://www.paramountplus.com",
       "scripts": [
-        "rcu_plugin.js",
-        "paramount_navigation.js"
+        "paramount_navigation.js",
+		"paramount_media_keys_20260721_r1.js",
+		"paramount_browse_navigation_20260721_r13.js",
+        "rcu_plugin.js"
       ]
     },
     {
