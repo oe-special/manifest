@@ -1,13 +1,41 @@
 (function () {
     "use strict";
 
+    function fixInvalidScreenMetrics() {
+        if (!window.screen || (screen.width > 1 && screen.height > 1)) {
+            return;
+        }
+        var width = Math.max(1, window.innerWidth || 1280);
+        var height = Math.max(1, window.innerHeight || 720);
+        try {
+            ["width", "availWidth"].forEach(function (name) {
+                Object.defineProperty(window.screen, name, {
+                    configurable: true,
+                    enumerable: true,
+                    get: function () { return width; }
+                });
+            });
+            ["height", "availHeight"].forEach(function (name) {
+                Object.defineProperty(window.screen, name, {
+                    configurable: true,
+                    enumerable: true,
+                    get: function () { return height; }
+                });
+            });
+        } catch (error) {
+            // Native metrics stay unchanged when the Screen object is locked.
+        }
+    }
+
+    fixInvalidScreenMetrics();
+
     if (window.__chromiumRcuPlugin) {
         return;
     }
 
     window.__chromiumRcuPlugin = {
-        version: "1.0.1",
-        date: "2026-07-20"
+        version: "1.0.4",
+        date: "2026-07-21"
     };
 
     var selector = [
@@ -40,6 +68,13 @@
 
     function visible(element) {
         if (!element || element.disabled || element.getAttribute("aria-hidden") === "true") {
+            return false;
+        }
+        if (element.closest && element.closest("footer,[role='contentinfo']")) {
+            return false;
+        }
+        var href = element.getAttribute && element.getAttribute("href") || "";
+        if (/(?:^|\/)(?:agb|datenschutz|impressum|barrierefreiheit|privacy|terms|legal)(?:[\/?#]|$)/i.test(href)) {
             return false;
         }
         var rect = element.getBoundingClientRect();
@@ -229,6 +264,14 @@
     }
 
     function onKeyDown(event) {
+        if (
+            window.top === window &&
+            window.location.hostname === "plus.rtl.de" &&
+            !/\/video\//.test(window.location.pathname) &&
+            !activeModal()
+        ) {
+            return;
+        }
         if (inVirtualKeyboard()) {
             return;
         }
@@ -240,13 +283,13 @@
 
         if (!editable(active) || event.key.indexOf("Arrow") === 0) {
             if (event.key === "ArrowLeft" || code === 37) {
-                handled = move("left") || Boolean(modal);
+                handled = move("left") || Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowUp" || code === 38) {
-                handled = move("up") || Boolean(modal);
+                handled = move("up") || Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowRight" || code === 39) {
-                handled = move("right") || Boolean(modal);
+                handled = move("right") || Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowDown" || code === 40) {
-                handled = move("down") || Boolean(modal);
+                handled = move("down") || Boolean(modal) || candidates().length > 0;
             }
         }
 

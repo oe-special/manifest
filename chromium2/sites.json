@@ -289,11 +289,20 @@
     {
       "url": "https://plus.rtl.de",
       "scripts": [
+        "rtlplus_media_keys_20260721_r1.js",
+        "rtlplus_epg_navigation_20260721_r1.js",
+        "rtlplus_navigation_20260721_r12.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://my.plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.rtl.de",
       "scripts": [
         "rcu_plugin.js"
       ]

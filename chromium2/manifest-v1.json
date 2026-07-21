@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-21T18:33:15Z",
+  "generated_utc": "2026-07-21T22:00:29+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -278,8 +278,8 @@
       "url": "https://www.paramountplus.com",
       "scripts": [
         "paramount_navigation.js",
-		"paramount_media_keys_20260721_r1.js",
-		"paramount_browse_navigation_20260721_r13.js",
+        "paramount_media_keys_20260721_r1.js",
+        "paramount_browse_navigation_20260721_r13.js",
         "rcu_plugin.js"
       ]
     },
@@ -292,11 +292,20 @@
     {
       "url": "https://plus.rtl.de",
       "scripts": [
+        "rtlplus_media_keys_20260721_r1.js",
+        "rtlplus_epg_navigation_20260721_r1.js",
+        "rtlplus_navigation_20260721_r12.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://my.plus.rtl.de",
+      "scripts": [
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://auth.rtl.de",
       "scripts": [
         "rcu_plugin.js"
       ]
@@ -504,14 +513,8 @@
       "sha256": "96900d1a19f98cbbbd8cbf7d526b71098543a5d79e7389f27604a5a5cf00c5b1"
     },
     {
-      "name": "paramountplus_FHD.png",
-      "path": "files/paramountplus_FHD.png",
-      "size": 4757,
-      "sha256": "4d29f66231c039a83d301c763871c5e88695cb02f146aa9b1203fc0391eac091"
-    },
-    {
-		"name": "paramount_browse_navigation_20260721_r13.js",
-		"path": "files/paramount_browse_navigation_20260721_r13.js",
+      "name": "paramount_browse_navigation_20260721_r13.js",
+      "path": "files/paramount_browse_navigation_20260721_r13.js",
       "size": 35088,
       "sha256": "a4e37b17c9dfecf87c5caca7cac12ef4c934467a0558826e71a304a532a89e94"
     },
@@ -526,6 +529,12 @@
       "path": "files/paramount_navigation.js",
       "size": 10914,
       "sha256": "bcb6e5f932412289dccd7e22dbec251560bba01911a186d8af0df3614b132d67"
+    },
+    {
+      "name": "paramountplus_FHD.png",
+      "path": "files/paramountplus_FHD.png",
+      "size": 4757,
+      "sha256": "4d29f66231c039a83d301c763871c5e88695cb02f146aa9b1203fc0391eac091"
     },
     {
       "name": "plutotv_FHD.png",
@@ -578,14 +587,32 @@
     {
       "name": "rcu_plugin.js",
       "path": "files/rcu_plugin.js",
-      "size": 10104,
-      "sha256": "05bb0f46769276f2f109ffffc6b0960544f6d094943d6eaae2fc5e42c8cfe866"
+      "size": 11816,
+      "sha256": "bb8e44505178e00669d9519b6d713f1c299d71de126ad49f54c0c209cbd94e95"
     },
     {
       "name": "rtlplus_FHD.png",
       "path": "files/rtlplus_FHD.png",
       "size": 3249,
       "sha256": "7536b19657a6fde9e7b949a7ada533a9afc1b31e2266e90963049aab0f068eec"
+    },
+    {
+      "name": "rtlplus_epg_navigation_20260721_r1.js",
+      "path": "files/rtlplus_epg_navigation_20260721_r1.js",
+      "size": 21733,
+      "sha256": "297f7578bcfd21b48ce10fda0fd9b9e308d4b03fcb501449f8d695fcb5de7ca3"
+    },
+    {
+      "name": "rtlplus_media_keys_20260721_r1.js",
+      "path": "files/rtlplus_media_keys_20260721_r1.js",
+      "size": 7616,
+      "sha256": "7c141effc93f781cd0153b7ec816ae151b2374217a4fd0e46c3dac3b30070ecf"
+    },
+    {
+      "name": "rtlplus_navigation_20260721_r12.js",
+      "path": "files/rtlplus_navigation_20260721_r12.js",
+      "size": 35069,
+      "sha256": "a6cf26de4191deeadc8251c40580674fb0416baf2a055d8553229a39b6d05a76"
     },
     {
       "name": "sweettv_plugin.js",
