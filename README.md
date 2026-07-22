@@ -82,6 +82,9 @@ The Dream Menu key toggles between Pluto's current header and page content.
 
 `zattoo_layout_20260722_r1.js` hides Zattoo's fixed 300-pixel advertising
 sidebar and releases the reserved width for the header and main content.
+`zattoo_navigation_20260722_r1.js` keeps remote-control focus within the
+header, hero and individual content carousels. Off-screen carousel duplicates
+are ignored and the carousel controls are used when focus reaches an edge.
 `paramount_navigation.js` replaces Paramount+'s obsolete
 `/[region]/account/flow/.../action/login/` target (also accepted without a
 region), which returns HTTP 403, with the
