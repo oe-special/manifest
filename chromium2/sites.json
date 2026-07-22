@@ -350,6 +350,7 @@
     {
       "url": "https://tv.apple.com",
       "scripts": [
+        "appletv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },

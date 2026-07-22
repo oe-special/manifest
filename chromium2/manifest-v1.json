@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T06:01:03+00:00",
+  "generated_utc": "2026-07-22T06:20:16+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -353,6 +353,7 @@
     {
       "url": "https://tv.apple.com",
       "scripts": [
+        "appletv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
@@ -395,6 +396,12 @@
       "path": "files/appletv_FHD.png",
       "size": 4219,
       "sha256": "fac62672853c23b882f45df13bea9cc7f6e1d3560ba61ebf488d8f076e1afcd4"
+    },
+    {
+      "name": "appletv_navigation_20260722_r1.js",
+      "path": "files/appletv_navigation_20260722_r1.js",
+      "size": 5084,
+      "sha256": "1221c48a4344afdc2cc98cfe61ae998bb7865a14465c5fbbe4d9f36e15284479"
     },
     {
       "name": "bein_plugin.js",
