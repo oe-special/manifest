@@ -134,6 +134,68 @@
 		console.log("[OpenATV Disney Navigation] Chromium 92 login CSS compatibility active");
 	}
 
+	function installFrozenHeroStyle() {
+		if (document.getElementById("openatv-disney-frozen-hero"))
+			return;
+		var style = document.createElement("style");
+		style.id = "openatv-disney-frozen-hero";
+		style.textContent = [
+			"[data-testid='hero-carousel-shelf-item']{",
+			"animation:none!important;transition:none!important;",
+			"}",
+			"[data-testid='hero-carousel-shelf-item'] *{",
+			"animation:none!important;transition:none!important;",
+			"}",
+			"[data-testid='hero-carousel-shelf-item']",
+			"[data-openatv-hero-hidden='true']{display:none!important;}",
+			"[data-testid='hero-carousel-shelf-item']",
+			"[data-openatv-hero-primary='true']{",
+			"display:block!important;opacity:1!important;",
+			"visibility:visible!important;transform:none!important;",
+			"}"
+		].join("");
+		(document.head || document.documentElement).appendChild(style);
+	}
+
+	var heroFreezeAttempts = 0;
+	function freezeHeroCarousel() {
+		var items = document.querySelectorAll(
+			"[data-testid='hero-carousel-shelf-item']"
+		);
+		if (!items.length) {
+			heroFreezeAttempts++;
+			if (heroFreezeAttempts >= 30 && window.__openatvDisneyHeroTimer) {
+				window.clearInterval(window.__openatvDisneyHeroTimer);
+				window.__openatvDisneyHeroTimer = null;
+			}
+			return;
+		}
+		if (window.__openatvDisneyHeroTimer) {
+			window.clearInterval(window.__openatvDisneyHeroTimer);
+			window.__openatvDisneyHeroTimer = null;
+		}
+		items[0].setAttribute("data-openatv-hero-primary", "true");
+		for (var index = 1; index < items.length; index++)
+			items[index].setAttribute("data-openatv-hero-hidden", "true");
+
+		var hero = items[0].closest("section") || items[0].parentElement;
+		if (hero) {
+			hero.dispatchEvent(new MouseEvent("mouseenter", {
+				bubbles: true,
+				cancelable: false,
+				view: window
+			}));
+			hero.dispatchEvent(new PointerEvent("pointerenter", {
+				bubbles: true,
+				cancelable: false,
+				pointerId: 1,
+				pointerType: "mouse",
+				isPrimary: true
+			}));
+		}
+		console.log("[OpenATV Disney Navigation] froze hero carousel at one item");
+	}
+
 	function loginButton() {
 		var elements = Array.prototype.filter.call(
 			document.querySelectorAll("a[href],button,[role='button']"),
@@ -217,18 +279,26 @@
 		return true;
 	}
 
-	var dismissedOnboardingBanner = null;
+	var onboardingDismissAttempts = 0;
 	function dismissOnboardingBanner() {
-		var controls = onboardingControls();
-		if (!controls || !controls.close) {
-			dismissedOnboardingBanner = null;
+		var banner = document.querySelector("[data-testid='add-profile-banner']");
+		var close = banner && banner.querySelector(
+			"[data-testid='onboardingbanner-closeIcon']"
+		);
+		if (!close) {
+			onboardingDismissAttempts++;
+			if (onboardingDismissAttempts >= 40 &&
+					window.__openatvDisneyOnboardingTimer) {
+				window.clearInterval(window.__openatvDisneyOnboardingTimer);
+				window.__openatvDisneyOnboardingTimer = null;
+			}
 			return;
 		}
-		var banner = controls.close.closest("[data-testid='add-profile-banner']");
-		if (!banner || banner === dismissedOnboardingBanner)
-			return;
-		dismissedOnboardingBanner = banner;
-		activateOnboardingControl(controls.close);
+		if (window.__openatvDisneyOnboardingTimer) {
+			window.clearInterval(window.__openatvDisneyOnboardingTimer);
+			window.__openatvDisneyOnboardingTimer = null;
+		}
+		activateOnboardingControl(close);
 		console.log("[OpenATV Disney Navigation] dismissed add-profile banner");
 	}
 
@@ -323,13 +393,23 @@
 
 	// Window capture runs before the generic document-level spatial handler.
 	installChromium92LoginCompatibility();
+	installFrozenHeroStyle();
 	window.addEventListener("keydown", onKeyDown, true);
-	dismissOnboardingBanner();
 	if (window.__openatvDisneyOnboardingTimer)
 		window.clearInterval(window.__openatvDisneyOnboardingTimer);
+	onboardingDismissAttempts = 0;
 	window.__openatvDisneyOnboardingTimer = window.setInterval(
 		dismissOnboardingBanner,
-		750
+		1000
 	);
+	dismissOnboardingBanner();
+	if (window.__openatvDisneyHeroTimer)
+		window.clearInterval(window.__openatvDisneyHeroTimer);
+	heroFreezeAttempts = 0;
+	window.__openatvDisneyHeroTimer = window.setInterval(
+		freezeHeroCarousel,
+		1000
+	);
+	freezeHeroCarousel();
 	console.log("[OpenATV Disney Navigation] installed");
 }());
