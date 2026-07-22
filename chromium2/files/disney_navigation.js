@@ -177,11 +177,6 @@
 			element.focus();
 		}
 		element.classList.add("chromium-rcu-focus");
-		// Chromium 92 does not always paint an outline around a focused SVG.
-		// Mark its container as well so the Disney close icon is visible.
-		if (element.tagName && element.tagName.toLowerCase() === "svg" &&
-				element.parentElement)
-			element.parentElement.classList.add("chromium-rcu-focus");
 		// The onboarding banner is fixed over a very tall home page. Calling
 		// scrollIntoView() here scrolls the page behind it and makes Disney load
 		// thousands of off-screen images, which can stall the Amlogic renderer.
@@ -192,6 +187,49 @@
 				(label || "control") + " " +
 				"text=\"" + text(element).slice(0, 80) + "\"");
 		return true;
+	}
+
+	function activateOnboardingControl(element) {
+		if (!element)
+			return false;
+		var rect = element.getBoundingClientRect();
+		var base = {
+			bubbles: true,
+			cancelable: true,
+			view: window,
+			clientX: rect.left + rect.width / 2,
+			clientY: rect.top + rect.height / 2,
+			button: 0,
+			buttons: 1,
+			pointerId: 1,
+			pointerType: "mouse",
+			isPrimary: true
+		};
+		// Disney binds this SVG through its interaction layer. A plain
+		// element.click() is ignored, while the complete pointer/mouse sequence
+		// is handled in the same way as a physical click.
+		element.dispatchEvent(new PointerEvent("pointerdown", base));
+		element.dispatchEvent(new MouseEvent("mousedown", base));
+		base.buttons = 0;
+		element.dispatchEvent(new PointerEvent("pointerup", base));
+		element.dispatchEvent(new MouseEvent("mouseup", base));
+		element.dispatchEvent(new MouseEvent("click", base));
+		return true;
+	}
+
+	var dismissedOnboardingBanner = null;
+	function dismissOnboardingBanner() {
+		var controls = onboardingControls();
+		if (!controls || !controls.close) {
+			dismissedOnboardingBanner = null;
+			return;
+		}
+		var banner = controls.close.closest("[data-testid='add-profile-banner']");
+		if (!banner || banner === dismissedOnboardingBanner)
+			return;
+		dismissedOnboardingBanner = banner;
+		activateOnboardingControl(controls.close);
+		console.log("[OpenATV Disney Navigation] dismissed add-profile banner");
 	}
 
 	function consume(event) {
@@ -214,14 +252,14 @@
 
 		if (key === "Escape" || key === "BrowserBack" ||
 				key === "Backspace" || code === 8 || code === 27 || code === 166) {
-			controls.close.click();
+			activateOnboardingControl(controls.close);
 			consume(event);
 			return true;
 		}
 
 		if (key === "Enter" || code === 13) {
 			if (active === controls.close || active === controls.addProfile) {
-				active.click();
+				activateOnboardingControl(active);
 			} else {
 				focus(controls.close, "onboarding close", false);
 			}
@@ -286,5 +324,12 @@
 	// Window capture runs before the generic document-level spatial handler.
 	installChromium92LoginCompatibility();
 	window.addEventListener("keydown", onKeyDown, true);
+	dismissOnboardingBanner();
+	if (window.__openatvDisneyOnboardingTimer)
+		window.clearInterval(window.__openatvDisneyOnboardingTimer);
+	window.__openatvDisneyOnboardingTimer = window.setInterval(
+		dismissOnboardingBanner,
+		750
+	);
 	console.log("[OpenATV Disney Navigation] installed");
 }());
