@@ -293,6 +293,37 @@
 		console.log("[OpenATV Disney Navigation] hid hero carousel section");
 	}
 
+	function installPersistentHeroObserver() {
+		if (window.__openatvDisneyPersistentHeroObserver)
+			return;
+		window.__openatvDisneyPersistentHeroObserver = new MutationObserver(
+			function (mutations) {
+				for (var index = 0; index < mutations.length; index++) {
+					var nodes = mutations[index].addedNodes;
+					for (var nodeIndex = 0;
+							nodeIndex < nodes.length;
+							nodeIndex++) {
+						var node = nodes[nodeIndex];
+						if (node.nodeType !== 1)
+							continue;
+						if ((node.matches && node.matches(
+								"[data-testid='hero-carousel-shelf-item']"
+							)) || (node.querySelector && node.querySelector(
+								"[data-testid='hero-carousel-shelf-item']"
+							))) {
+							window.setTimeout(freezeHeroCarousel, 0);
+							return;
+						}
+					}
+				}
+			}
+		);
+		window.__openatvDisneyPersistentHeroObserver.observe(
+			document.documentElement,
+			{childList: true, subtree: true}
+		);
+	}
+
 	function loginButton() {
 		var elements = Array.prototype.filter.call(
 			document.querySelectorAll("a[href],button,[role='button']"),
@@ -408,6 +439,62 @@
 			event.stopImmediatePropagation();
 		else
 			event.stopPropagation();
+	}
+
+	function handleProfileMenu(event) {
+		var menu = document.querySelector(
+			"[data-testid='account-dropdown-list']"
+		);
+		if (!menu || !visible(menu) ||
+				menu.getBoundingClientRect().height < 150)
+			return false;
+
+		var profile = menu.querySelector(
+			"a[data-testid='dropdown-active-profile']"
+		);
+		var options = Array.prototype.filter.call(
+			menu.querySelectorAll(
+				"[role='menuitem'][data-testid^='dropdown-option-']"
+			),
+			visible
+		);
+		var controls = profile && visible(profile) ?
+			[profile].concat(options) : options;
+		var source = event.target;
+		if (source && source.closest) {
+			source = source.closest([
+				"a[data-testid='dropdown-active-profile']",
+				"[role='menuitem'][data-testid^='dropdown-option-']"
+			].join(",")) || source;
+		}
+		var current = source || document.activeElement;
+		var currentIndex = controls.indexOf(current);
+		if (currentIndex < 0)
+			return false;
+
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		if (key === "Enter" || code === 13) {
+			if (current === profile)
+				activateOnboardingControl(current);
+			else
+				current.click();
+			consume(event);
+			return true;
+		}
+
+		var step = 0;
+		if (key === "ArrowUp" || code === 38)
+			step = -1;
+		else if (key === "ArrowDown" || code === 40)
+			step = 1;
+		else
+			return false;
+		var targetIndex = currentIndex + step;
+		if (targetIndex >= 0 && targetIndex < controls.length)
+			focus(controls[targetIndex], "profile menu item", false);
+		consume(event);
+		return true;
 	}
 
 	function handleHeaderNavigation(event) {
@@ -676,6 +763,8 @@
 	function onKeyDown(event) {
 		if (handleOnboarding(event))
 			return;
+		if (handleProfileMenu(event))
+			return;
 		if (handleHeaderNavigation(event))
 			return;
 		if (handleDetailActionNavigation(event))
@@ -721,6 +810,7 @@
 	installChromium92LoginCompatibility();
 	installCompactImageLoader();
 	installFrozenHeroStyle();
+	installPersistentHeroObserver();
 	window.addEventListener("keydown", onKeyDown, true);
 	if (window.__openatvDisneyOnboardingTimer)
 		window.clearInterval(window.__openatvDisneyOnboardingTimer);
