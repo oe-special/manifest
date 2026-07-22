@@ -346,6 +346,7 @@
     {
       "url": "https://www.disneyplus.com",
       "scripts": [
+		"disney_media_keys_20260722_r1.js",
         "disney_navigation.js",
         "rcu_plugin.js"
       ]
