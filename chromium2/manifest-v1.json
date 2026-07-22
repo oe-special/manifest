@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T10:40:16+00:00",
+  "generated_utc": "2026-07-22T10:53:45+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -226,10 +226,10 @@
     {
       "url": "https://pluto.tv",
       "scripts": [
-        "plutotv_media_keys_20260722_r3.js",
+        "plutotv_media_keys_20260722_r4.js",
         "plutotv_plugin.js",
         "plutotv_consent_20260722_r1.js",
-        "plutotv_navigation_20260722_r6.js"
+        "plutotv_navigation_20260722_r7.js"
       ]
     },
     {
@@ -583,16 +583,16 @@
       "sha256": "33b9bdfeeacc4408a6b52317da07ffb0d3c35ee823d8a088bae272e8631259da"
     },
     {
-      "name": "plutotv_media_keys_20260722_r3.js",
-      "path": "files/plutotv_media_keys_20260722_r3.js",
-      "size": 8598,
-      "sha256": "394c7854f7d53963fd1c1bd97348e74250b42e7cad4b452e2e6e2390fa0e6722"
+      "name": "plutotv_media_keys_20260722_r4.js",
+      "path": "files/plutotv_media_keys_20260722_r4.js",
+      "size": 11534,
+      "sha256": "91f7884a3b5d23bb73120f9feae078c1339fe0a976de8812b5b98b7aaa020fed"
     },
     {
-      "name": "plutotv_navigation_20260722_r6.js",
-      "path": "files/plutotv_navigation_20260722_r6.js",
-      "size": 37602,
-      "sha256": "c4a331d65c7280501f5aa47f00be2d905abdeaac556c8bb318bf45a682ce7387"
+      "name": "plutotv_navigation_20260722_r7.js",
+      "path": "files/plutotv_navigation_20260722_r7.js",
+      "size": 38243,
+      "sha256": "df15fcb4eda7a9196fa56cbc81d0e452af9c96035302925926e7aca6208e1b4b"
     },
     {
       "name": "plutotv_plugin.js",
