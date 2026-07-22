@@ -616,6 +616,121 @@
 		return true;
 	}
 
+	function handleDetailContentNavigation(event) {
+		if (window.location.pathname.indexOf("/browse/entity-") === -1)
+			return false;
+		var panel = document.querySelector("[data-testid='tab-panel--active']");
+		var tabs = Array.prototype.filter.call(
+			document.querySelectorAll("[data-testid='details-page-tab']"),
+			visible
+		);
+		var cards = panel ? Array.prototype.filter.call(
+			panel.querySelectorAll("a[data-testid='set-item']"),
+			visible
+		) : [];
+		var source = event.target;
+		if (source && source.closest) {
+			source = source.closest([
+				"[data-testid='details-page-tab']",
+				"a[data-testid='set-item']"
+			].join(",")) || source;
+		}
+		var currentTab = tabs.indexOf(source);
+		var currentCard = cards.indexOf(source);
+		if (currentTab < 0 && currentCard < 0)
+			return false;
+
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		if (key === "Enter" || code === 13) {
+			source.click();
+			consume(event);
+			return true;
+		}
+
+		var horizontal = key === "ArrowLeft" || key === "ArrowRight" ||
+			code === 37 || code === 39;
+		var vertical = key === "ArrowUp" || key === "ArrowDown" ||
+			code === 38 || code === 40;
+		if (!horizontal && !vertical)
+			return false;
+		var negative = key === "ArrowLeft" || key === "ArrowUp" ||
+			code === 37 || code === 38;
+		var step = negative ? -1 : 1;
+
+		if (currentTab >= 0) {
+			if (horizontal) {
+				var tabIndex = currentTab + step;
+				if (tabIndex >= 0 && tabIndex < tabs.length)
+					focus(tabs[tabIndex], "detail tab", false);
+				consume(event);
+				return true;
+			}
+			if (step < 0 || !cards.length) {
+				consume(event);
+				return true;
+			}
+			var tabRect = source.getBoundingClientRect();
+			var tabCenter = tabRect.left + tabRect.width / 2;
+			cards.sort(function (first, second) {
+				var firstRect = first.getBoundingClientRect();
+				var secondRect = second.getBoundingClientRect();
+				return Math.abs(firstRect.left + firstRect.width / 2 - tabCenter) -
+					Math.abs(secondRect.left + secondRect.width / 2 - tabCenter);
+			});
+			focus(cards[0], "detail grid item", false);
+			cards[0].scrollIntoView({block: "center", inline: "nearest"});
+			consume(event);
+			return true;
+		}
+
+		var currentRect = source.getBoundingClientRect();
+		var currentX = currentRect.left + currentRect.width / 2;
+		var currentY = currentRect.top + currentRect.height / 2;
+		var target = null;
+		var bestScore = Number.POSITIVE_INFINITY;
+		for (var index = 0; index < cards.length; index++) {
+			if (cards[index] === source)
+				continue;
+			var rect = cards[index].getBoundingClientRect();
+			var x = rect.left + rect.width / 2;
+			var y = rect.top + rect.height / 2;
+			var primary;
+			var secondary;
+			if (horizontal) {
+				if (Math.abs(y - currentY) > 80)
+					continue;
+				primary = step < 0 ? currentX - x : x - currentX;
+				secondary = Math.abs(y - currentY);
+			} else {
+				primary = step < 0 ? currentY - y : y - currentY;
+				if (primary < 80)
+					continue;
+				secondary = Math.abs(x - currentX);
+			}
+			if (primary <= 1)
+				continue;
+			var score = primary * 1000 + secondary;
+			if (score < bestScore) {
+				bestScore = score;
+				target = cards[index];
+			}
+		}
+		if (!target && vertical && step < 0) {
+			var selectedTab = tabs.filter(function (tab) {
+				return tab.getAttribute("aria-selected") === "true" ||
+					tab.getAttribute("tabindex") === "0";
+			})[0] || tabs[0];
+			if (selectedTab)
+				focus(selectedTab, "detail tab", false);
+		} else if (target) {
+			focus(target, "detail grid item", false);
+			target.scrollIntoView({block: "center", inline: "nearest"});
+		}
+		consume(event);
+		return true;
+	}
+
 	function handleShelfNavigation(event) {
 		var code = event.which || event.keyCode;
 		var key = event.key || event.code || "";
@@ -768,6 +883,8 @@
 		if (handleHeaderNavigation(event))
 			return;
 		if (handleDetailActionNavigation(event))
+			return;
+		if (handleDetailContentNavigation(event))
 			return;
 		if (handleShelfNavigation(event))
 			return;
