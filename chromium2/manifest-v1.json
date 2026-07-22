@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T15:38:39+00:00",
+  "generated_utc": "2026-07-22T15:46:50+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -40,8 +40,7 @@
       "url": "https://www.dazn.com/home",
       "mode": "Dazn",
       "requires_cdm": true,
-      "icon": "dazn_FHD.png",
-      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      "icon": "dazn_FHD.png"
     },
     {
       "id": "prime-video",
