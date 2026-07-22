@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T14:10:50+00:00",
+  "generated_utc": "2026-07-22T14:22:30+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -426,8 +426,8 @@
     {
       "name": "disney_navigation.js",
       "path": "files/disney_navigation.js",
-      "size": 22205,
-      "sha256": "4b036c9aa521f7d7b4a2fd9c1a0633924c7e34546cd7f8f46821a745fd4f0f3c"
+      "size": 24588,
+      "sha256": "5b8af95046b356682e19521d0aaa41ddf3f781b2a85ec033a40354a3272e7d94"
     },
     {
       "name": "dsmartgo_plugin.js",
@@ -660,8 +660,8 @@
     {
       "name": "rcu_plugin.js",
       "path": "files/rcu_plugin.js",
-      "size": 11816,
-      "sha256": "bb8e44505178e00669d9519b6d713f1c299d71de126ad49f54c0c209cbd94e95"
+      "size": 15106,
+      "sha256": "ae157bdf2ef88bedaa90bb4e0b44aa9bd240350097e9164bf700a09fd4015c48"
     },
     {
       "name": "rtlplus_FHD.png",

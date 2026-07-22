@@ -410,6 +410,83 @@
 			event.stopPropagation();
 	}
 
+	function handleHeaderNavigation(event) {
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		var source = event.target;
+		if (source && source.closest) {
+			source = source.closest([
+				"a[data-testid^='navigation-item-']",
+				"a[data-testid='dropdown-active-profile']",
+				"[data-testid='account-dropdown-list']"
+			].join(",")) || source;
+		}
+		var active = source || document.activeElement;
+		var activeId = active && active.getAttribute &&
+			active.getAttribute("data-testid");
+		var inProfile = activeId === "dropdown-active-profile" ||
+			activeId === "account-dropdown-list";
+		var inNavigation = Boolean(active && active.matches &&
+			active.matches("a[data-testid^='navigation-item-']"));
+		if (!inProfile && !inNavigation)
+			return false;
+
+		var profile = document.querySelector(
+			"a[data-testid='dropdown-active-profile']"
+		);
+		if ((key === "Enter" || code === 13) && inProfile) {
+			activateOnboardingControl(profile || active);
+			consume(event);
+			return true;
+		}
+
+		var step = 0;
+		if (key === "ArrowLeft" || code === 37)
+			step = -1;
+		else if (key === "ArrowRight" || code === 39)
+			step = 1;
+		else
+			return false;
+		var byId = {};
+		var all = document.querySelectorAll(
+			"a[data-testid^='navigation-item-']"
+		);
+		for (var index = 0; index < all.length; index++) {
+			if (!visible(all[index]))
+				continue;
+			var id = all[index].getAttribute("data-testid");
+			if (!byId[id] || all[index] === active)
+				byId[id] = all[index];
+		}
+		var controls = Object.keys(byId).map(function (id) {
+			return byId[id];
+		});
+		controls.sort(function (first, second) {
+			return first.getBoundingClientRect().left -
+				second.getBoundingClientRect().left;
+		});
+		if (profile && visible(profile))
+			controls.unshift(profile);
+		var currentIndex = inProfile ? 0 : -1;
+		for (var controlIndex = inProfile ? controls.length : 0;
+				controlIndex < controls.length;
+				controlIndex++) {
+			if (controls[controlIndex].getAttribute("data-testid") === activeId) {
+				currentIndex = controlIndex;
+				break;
+			}
+		}
+		var targetIndex = currentIndex + step;
+		if (currentIndex < 0 || targetIndex < 0 ||
+				targetIndex >= controls.length) {
+			consume(event);
+			return true;
+		}
+		focus(controls[targetIndex], "header navigation", false);
+		consume(event);
+		return true;
+	}
+
 	function handleDetailActionNavigation(event) {
 		if (window.location.pathname.indexOf("/browse/entity-") === -1)
 			return false;
@@ -598,6 +675,8 @@
 
 	function onKeyDown(event) {
 		if (handleOnboarding(event))
+			return;
+		if (handleHeaderNavigation(event))
 			return;
 		if (handleDetailActionNavigation(event))
 			return;

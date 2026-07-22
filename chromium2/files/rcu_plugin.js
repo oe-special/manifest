@@ -34,8 +34,8 @@
     }
 
     window.__chromiumRcuPlugin = {
-        version: "1.0.4",
-        date: "2026-07-21"
+        version: "1.0.5",
+        date: "2026-07-22"
     };
 
     var selector = [
@@ -237,6 +237,90 @@
         return focusElement(best);
     }
 
+    function handleDisneyHeader(direction, event) {
+        if (!/(^|\.)disneyplus\.com$/i.test(window.location.hostname) ||
+                (direction !== "left" && direction !== "right")) {
+            return false;
+        }
+
+        var source = event && event.target;
+        if (source && source.closest) {
+            source = source.closest([
+                "a[data-testid^='navigation-item-']",
+                "a[data-testid='dropdown-active-profile']",
+                "[data-testid='account-dropdown-list']"
+            ].join(",")) || source;
+        }
+        var active = source || document.activeElement;
+        var activeId = active && active.getAttribute &&
+            active.getAttribute("data-testid");
+        var inProfile = activeId === "dropdown-active-profile" ||
+            activeId === "account-dropdown-list" ||
+            Boolean(active && active.closest &&
+                active.closest("[data-testid='account-dropdown-list']"));
+        var inNavigation = Boolean(active && active.matches &&
+            active.matches("a[data-testid^='navigation-item-']"));
+        if (!inProfile && !inNavigation) {
+            return false;
+        }
+
+        var profile = document.querySelector(
+            "a[data-testid='dropdown-active-profile']"
+        );
+        var byId = {};
+        var navigation = document.querySelectorAll(
+            "a[data-testid^='navigation-item-']"
+        );
+        for (var index = 0; index < navigation.length; index++) {
+            if (!visible(navigation[index])) {
+                continue;
+            }
+            var id = navigation[index].getAttribute("data-testid");
+            if (!byId[id] || navigation[index] === active) {
+                byId[id] = navigation[index];
+            }
+        }
+        var controls = Object.keys(byId).map(function (id) {
+            return byId[id];
+        });
+        controls.sort(function (first, second) {
+            return first.getBoundingClientRect().left -
+                second.getBoundingClientRect().left;
+        });
+        if (profile && visible(profile)) {
+            controls.unshift(profile);
+        }
+
+        var currentIndex = inProfile ? 0 : -1;
+        if (!inProfile) {
+            for (var controlIndex = 0;
+                    controlIndex < controls.length;
+                    controlIndex++) {
+                if (controls[controlIndex].getAttribute("data-testid") === activeId) {
+                    currentIndex = controlIndex;
+                    break;
+                }
+            }
+        }
+        var targetIndex = currentIndex + (direction === "left" ? -1 : 1);
+        if (currentIndex < 0 || targetIndex < 0 ||
+                targetIndex >= controls.length) {
+            return true;
+        }
+
+        var previous = document.querySelector(".chromium-rcu-focus");
+        if (previous) {
+            previous.classList.remove("chromium-rcu-focus");
+        }
+        try {
+            controls[targetIndex].focus({preventScroll: true});
+        } catch (error) {
+            controls[targetIndex].focus();
+        }
+        controls[targetIndex].classList.add("chromium-rcu-focus");
+        return true;
+    }
+
     function activate() {
         var active = currentElement(candidates());
         if (!active) {
@@ -283,11 +367,13 @@
 
         if (!editable(active) || event.key.indexOf("Arrow") === 0) {
             if (event.key === "ArrowLeft" || code === 37) {
-                handled = move("left") || Boolean(modal) || candidates().length > 0;
+                handled = handleDisneyHeader("left", event) || move("left") ||
+                    Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowUp" || code === 38) {
                 handled = move("up") || Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowRight" || code === 39) {
-                handled = move("right") || Boolean(modal) || candidates().length > 0;
+                handled = handleDisneyHeader("right", event) || move("right") ||
+                    Boolean(modal) || candidates().length > 0;
             } else if (event.key === "ArrowDown" || code === 40) {
                 handled = move("down") || Boolean(modal) || candidates().length > 0;
             }
@@ -353,5 +439,5 @@
         }
     }, 1200);
 
-    console.log("[Chromium RCU] generic plugin 1.0.1 active on " + location.origin);
+    console.log("[Chromium RCU] generic plugin 1.0.5 active on " + location.origin);
 }());
