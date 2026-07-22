@@ -140,6 +140,19 @@
 		var style = document.createElement("style");
 		style.id = "openatv-disney-frozen-hero";
 		style.textContent = [
+			"[data-testid='set-shelf-item']{",
+			"box-sizing:border-box!important;",
+			"flex:0 0 180px!important;width:180px!important;",
+			"min-width:180px!important;max-width:180px!important;",
+			"}",
+			"[data-testid='set-shelf-item']>[data-testid='set-item']{",
+			"box-sizing:border-box!important;width:180px!important;",
+			"min-width:180px!important;max-width:180px!important;",
+			"transition:none!important;",
+			"}",
+			"section[data-openatv-hero-section='hidden']{",
+			"display:none!important;",
+			"}",
 			"[data-testid='hero-carousel-shelf-item']{",
 			"animation:none!important;transition:none!important;",
 			"}",
@@ -178,22 +191,10 @@
 		for (var index = 1; index < items.length; index++)
 			items[index].setAttribute("data-openatv-hero-hidden", "true");
 
-		var hero = items[0].closest("section") || items[0].parentElement;
-		if (hero) {
-			hero.dispatchEvent(new MouseEvent("mouseenter", {
-				bubbles: true,
-				cancelable: false,
-				view: window
-			}));
-			hero.dispatchEvent(new PointerEvent("pointerenter", {
-				bubbles: true,
-				cancelable: false,
-				pointerId: 1,
-				pointerType: "mouse",
-				isPrimary: true
-			}));
-		}
-		console.log("[OpenATV Disney Navigation] froze hero carousel at one item");
+		var hero = items[0].closest("section");
+		if (hero)
+			hero.setAttribute("data-openatv-hero-section", "hidden");
+		console.log("[OpenATV Disney Navigation] hid hero carousel section");
 	}
 
 	function loginButton() {
