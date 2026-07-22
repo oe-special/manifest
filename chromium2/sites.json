@@ -361,8 +361,11 @@
     {
       "url": "https://www.dazn.com",
       "scripts": [
-		"dazn_navigation_20260722_r1.js",
+        "dazn_navigation_20260722_r1.js",
         "rcu_plugin.js"
+      ],
+      "styles": [
+        "kb.css"
       ]
     },
     {

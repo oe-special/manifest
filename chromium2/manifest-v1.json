@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T15:11:20+00:00",
+  "generated_utc": "2026-07-22T15:16:49+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -366,6 +366,9 @@
       "scripts": [
         "dazn_navigation_20260722_r1.js",
         "rcu_plugin.js"
+      ],
+      "styles": [
+        "kb.css"
       ]
     },
     {
