@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T04:56:16+00:00",
+  "generated_utc": "2026-07-22T06:01:03+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -316,6 +316,7 @@
         "magentatv_info_overlay_20260722_r1.js",
         "magentatv_wizard_20260722_r1.js",
         "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_media_keys_20260722_r1.js",
         "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
@@ -326,6 +327,7 @@
         "magentatv_info_overlay_20260722_r1.js",
         "magentatv_wizard_20260722_r1.js",
         "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_media_keys_20260722_r1.js",
         "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
@@ -336,6 +338,7 @@
         "magentatv_info_overlay_20260722_r1.js",
         "magentatv_wizard_20260722_r1.js",
         "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_media_keys_20260722_r1.js",
         "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
@@ -506,6 +509,12 @@
       "path": "files/magentatv_login_20260722_r1.js",
       "size": 4994,
       "sha256": "70a516f99b27507b5722cf54ea145706e8d7c733aa78e8cb8d571b21b375a9ed"
+    },
+    {
+      "name": "magentatv_media_keys_20260722_r1.js",
+      "path": "files/magentatv_media_keys_20260722_r1.js",
+      "size": 8697,
+      "sha256": "5beaa4315127c1a9482278ecf00f5cb475b870326376fbc238fdd8f24a5b3260"
     },
     {
       "name": "magentatv_navigation_20260722_r1.js",
