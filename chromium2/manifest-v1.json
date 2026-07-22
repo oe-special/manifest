@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T10:53:45+00:00",
+  "generated_utc": "2026-07-22T11:02:07+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -229,6 +229,7 @@
         "plutotv_media_keys_20260722_r4.js",
         "plutotv_plugin.js",
         "plutotv_consent_20260722_r1.js",
+        "plutotv_account_navigation_20260722_r1.js",
         "plutotv_navigation_20260722_r7.js"
       ]
     },
@@ -575,6 +576,12 @@
       "path": "files/plutotv_FHD.png",
       "size": 3879,
       "sha256": "82c8bea0b9293cc2f567a1b8685e95b4100c4d4ebf5b9a7484a0b702d7e36dff"
+    },
+    {
+      "name": "plutotv_account_navigation_20260722_r1.js",
+      "path": "files/plutotv_account_navigation_20260722_r1.js",
+      "size": 6125,
+      "sha256": "751a01bfdffb5889b2acda4fc7049f242038b788276836a9a8e67f1ae68ae5a0"
     },
     {
       "name": "plutotv_consent_20260722_r1.js",
