@@ -247,7 +247,10 @@
 		if (window.console && typeof window.console.log === "function")
 			window.console.log("[OpenATV Disney Navigation] focused " +
 				(label || "control") + " " +
-				"text=\"" + text(element).slice(0, 80) + "\"");
+				"text=\"" + String(
+					element.getAttribute("aria-label") ||
+					element.textContent || ""
+				).replace(/\s+/g, " ").trim().slice(0, 80) + "\"");
 		return true;
 	}
 
@@ -310,6 +313,57 @@
 			event.stopPropagation();
 	}
 
+	function handleShelfNavigation(event) {
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		var step = 0;
+		if (key === "ArrowLeft" || code === 37)
+			step = -1;
+		else if (key === "ArrowRight" || code === 39)
+			step = 1;
+		else
+			return false;
+
+		var active = document.activeElement;
+		var current = active && active.closest &&
+			active.closest("[data-testid='set-shelf-item']");
+		var shelf = current && current.parentElement;
+		if (!current || !shelf ||
+				shelf.getAttribute("data-testid") !== "set-shelf")
+			return false;
+
+		var items = Array.prototype.filter.call(shelf.children, function (item) {
+			return item.getAttribute &&
+				item.getAttribute("data-testid") === "set-shelf-item";
+		});
+		var currentIndex = items.indexOf(current);
+		var targetIndex = currentIndex + step;
+		if (currentIndex < 0 || targetIndex < 0 || targetIndex >= items.length) {
+			consume(event);
+			return true;
+		}
+
+		var targetItem = items[targetIndex];
+		var target = targetItem.querySelector(
+			"a[data-testid='set-item'],button,[tabindex]"
+		);
+		if (!target) {
+			consume(event);
+			return true;
+		}
+		focus(target, "shelf item", false);
+		var shelfRect = shelf.getBoundingClientRect();
+		var targetRect = targetItem.getBoundingClientRect();
+		var edge = 12;
+		if (targetRect.left < shelfRect.left + edge) {
+			shelf.scrollLeft += targetRect.left - shelfRect.left - edge;
+		} else if (targetRect.right > shelfRect.right - edge) {
+			shelf.scrollLeft += targetRect.right - shelfRect.right + edge;
+		}
+		consume(event);
+		return true;
+	}
+
 	function handleOnboarding(event) {
 		var controls = onboardingControls();
 		if (!controls || !controls.close)
@@ -355,6 +409,8 @@
 
 	function onKeyDown(event) {
 		if (handleOnboarding(event))
+			return;
+		if (handleShelfNavigation(event))
 			return;
 		if (!isDisneyWelcome() || modalOpen())
 			return;
