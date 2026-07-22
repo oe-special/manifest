@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-21T22:00:29+00:00",
+  "generated_utc": "2026-07-22T04:56:16+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -313,18 +313,37 @@
     {
       "url": "https://www.magenta.tv",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://web2.magentatv.de",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://web.magentatv.de",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://accounts.login.idm.telekom.com",
+      "scripts": [
+        "magentatv_login_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
@@ -469,6 +488,36 @@
       "path": "files/magentatv_FHD.png",
       "size": 5001,
       "sha256": "d349e6e5c6987fe0211ecd80f9c556e94944f3215c1483cc94762f3737df00fc"
+    },
+    {
+      "name": "magentatv_detail_navigation_20260722_r1.js",
+      "path": "files/magentatv_detail_navigation_20260722_r1.js",
+      "size": 3163,
+      "sha256": "88f8429364502a7cb04070f35a97ea6b9020c9600c2345b538279528c1be4166"
+    },
+    {
+      "name": "magentatv_info_overlay_20260722_r1.js",
+      "path": "files/magentatv_info_overlay_20260722_r1.js",
+      "size": 4933,
+      "sha256": "a7cb7982231ef5eb3b4c240f3668b5627a3c9c3bf2bbc72b9e5f0d86937c00a8"
+    },
+    {
+      "name": "magentatv_login_20260722_r1.js",
+      "path": "files/magentatv_login_20260722_r1.js",
+      "size": 4994,
+      "sha256": "70a516f99b27507b5722cf54ea145706e8d7c733aa78e8cb8d571b21b375a9ed"
+    },
+    {
+      "name": "magentatv_navigation_20260722_r1.js",
+      "path": "files/magentatv_navigation_20260722_r1.js",
+      "size": 17960,
+      "sha256": "c92b31ef9bc041d0445e6e8536578d96252cb46f89b77ea03d57f7343c24a5e6"
+    },
+    {
+      "name": "magentatv_wizard_20260722_r1.js",
+      "path": "files/magentatv_wizard_20260722_r1.js",
+      "size": 4232,
+      "sha256": "4e25da780b9559d441a9a24f5a6e93d87c88b0e7c64ef76ce9bb9b9e6bff440d"
     },
     {
       "name": "mbc_plugin.js",

@@ -310,18 +310,37 @@
     {
       "url": "https://www.magenta.tv",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://web2.magentatv.de",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
     {
       "url": "https://web.magentatv.de",
       "scripts": [
+        "magentatv_info_overlay_20260722_r1.js",
+        "magentatv_wizard_20260722_r1.js",
+        "magentatv_detail_navigation_20260722_r1.js",
+        "magentatv_navigation_20260722_r1.js",
+        "rcu_plugin.js"
+      ]
+    },
+    {
+      "url": "https://accounts.login.idm.telekom.com",
+      "scripts": [
+        "magentatv_login_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
