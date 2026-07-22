@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T17:18:47+00:00",
+  "generated_utc": "2026-07-22T17:35:33+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -364,6 +364,7 @@
     {
       "url": "https://zattoo.com",
       "scripts": [
+        "zattoo_media_keys_20260722_r1.js",
         "zattoo_navigation_20260722_r1.js",
         "zattoo_layout_20260722_r1.js",
         "rcu_plugin.js"
@@ -715,6 +716,12 @@
       "path": "files/zattoo_layout_20260722_r1.js",
       "size": 505,
       "sha256": "da14e76fbb9551e2a6b96232d55d14aca15c61008baf071cb10b6f5f4c54888d"
+    },
+    {
+      "name": "zattoo_media_keys_20260722_r1.js",
+      "path": "files/zattoo_media_keys_20260722_r1.js",
+      "size": 8593,
+      "sha256": "e64adfce5e1ab6b94655c5327f2f7529079a48970a14a0ba122a552aee2fd9ef"
     },
     {
       "name": "zattoo_navigation_20260722_r1.js",

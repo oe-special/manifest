@@ -361,6 +361,7 @@
     {
       "url": "https://zattoo.com",
       "scripts": [
+		"zattoo_media_keys_20260722_r1.js",
 		"zattoo_navigation_20260722_r1.js",
 		"zattoo_layout_20260722_r1.js",
         "rcu_plugin.js"

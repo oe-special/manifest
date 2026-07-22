@@ -85,6 +85,10 @@ sidebar and releases the reserved width for the header and main content.
 `zattoo_navigation_20260722_r1.js` keeps remote-control focus within the
 header, hero and individual content carousels. Off-screen carousel duplicates
 are ignored and the carousel controls are used when focus reaches an edge.
+`zattoo_media_keys_20260722_r1.js` expands every active Zattoo live or VOD
+player to the complete browser viewport. It maps Dream media, stop/back,
+volume and mute keys directly to the active video and provides 15-second VOD
+seeking while leaving live streams unseeked.
 `paramount_navigation.js` replaces Paramount+'s obsolete
 `/[region]/account/flow/.../action/login/` target (also accepted without a
 region), which returns HTTP 403, with the
