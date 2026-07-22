@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T15:05:34+00:00",
+  "generated_utc": "2026-07-22T15:11:20+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -409,8 +409,8 @@
     {
       "name": "dazn_navigation_20260722_r1.js",
       "path": "files/dazn_navigation_20260722_r1.js",
-      "size": 3113,
-      "sha256": "c42a1bfe919aa66eaefb1ff1c01433eb54ec9ba120672b7faaaa0336c4201319"
+      "size": 4841,
+      "sha256": "c2f201108f9c457f23b9daad9da35173a904ec9e24a4f65fb5ffe65f7a4e288e"
     },
     {
       "name": "digiturk_plugin.js",
