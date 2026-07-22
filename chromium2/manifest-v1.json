@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T14:50:37+00:00",
+  "generated_utc": "2026-07-22T14:57:30+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -426,8 +426,8 @@
     {
       "name": "disney_navigation.js",
       "path": "files/disney_navigation.js",
-      "size": 32112,
-      "sha256": "f454836aab44042389c0ceb915572700ffd3b0fa9ead2745e64d9aad49f995bf"
+      "size": 32760,
+      "sha256": "ee4d6bd6dd1dd8521d2db2a0f6d1ecfeec5d9e970338b6b074a889e2dae4c88e"
     },
     {
       "name": "dsmartgo_plugin.js",

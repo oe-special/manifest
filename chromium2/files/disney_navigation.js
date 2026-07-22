@@ -617,10 +617,18 @@
 	}
 
 	function handleDetailMenuShortcut(event) {
-		if (window.location.pathname.indexOf("/browse/entity-") === -1)
+		if (!/(^|\.)disneyplus\.com$/i.test(window.location.hostname))
 			return false;
 		var code = event.which || event.keyCode;
 		var key = event.key || event.code || "";
+		var exit = code === 0x08 || code === 0x1B || code === 0xA6 ||
+			key === "Backspace" || key === "Escape" || key === "BrowserBack";
+		if (exit && /\/browse\/page-/i.test(window.location.pathname)) {
+			if (!event.repeat)
+				window.history.back();
+			consume(event);
+			return true;
+		}
 		if (code !== 0x5D && key !== "ContextMenu" && key !== "Menu")
 			return false;
 		var homes = document.querySelectorAll(
@@ -633,10 +641,21 @@
 				break;
 			}
 		}
-		if (home) {
-			window.scrollTo(0, 0);
-			focus(home, "main navigation", false);
+		if (!home)
+			return false;
+		var profileMenu = document.querySelector(
+			"[data-testid='account-dropdown-list']"
+		);
+		if (profileMenu && visible(profileMenu) &&
+				profileMenu.getBoundingClientRect().height >= 150) {
+			var profile = profileMenu.querySelector(
+				"a[data-testid='dropdown-active-profile']"
+			);
+			if (profile)
+				activateOnboardingControl(profile);
 		}
+		window.scrollTo(0, 0);
+		focus(home, "main navigation", false);
 		consume(event);
 		return true;
 	}
