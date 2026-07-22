@@ -120,13 +120,6 @@
                         openLoginKeyboard(field, "click");
                     }, 0);
                 }, true);
-                field.addEventListener("focus", function () {
-                    window.setTimeout(function () {
-                        if (document.activeElement === field) {
-                            openLoginKeyboard(field, "focus");
-                        }
-                    }, 0);
-                }, true);
             }
 
             if (!field.classList.contains("chromium-rcu-focus")) {
