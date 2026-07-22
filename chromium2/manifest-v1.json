@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T11:10:31+00:00",
+  "generated_utc": "2026-07-22T11:32:12+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -349,6 +349,7 @@
     {
       "url": "https://www.disneyplus.com",
       "scripts": [
+        "disney_memory_20260722_r1.js",
         "disney_navigation.js",
         "rcu_plugin.js"
       ]
@@ -356,6 +357,7 @@
     {
       "url": "https://auth.disneyplus.com",
       "scripts": [
+        "disney_memory_20260722_r1.js",
         "disney_navigation.js",
         "rcu_plugin.js"
       ]
@@ -415,6 +417,12 @@
       "path": "files/disney_FHD.png",
       "size": 12674,
       "sha256": "c947536d316babd6d8b18a26dfc59a13616fed4f75ffc448ff22b2587e1b88ec"
+    },
+    {
+      "name": "disney_memory_20260722_r1.js",
+      "path": "files/disney_memory_20260722_r1.js",
+      "size": 3516,
+      "sha256": "a3565d61baac4daab567bd2b00848ca6ed1583d3e24c963c9bcb9a9b8c48a6cd"
     },
     {
       "name": "disney_navigation.js",
