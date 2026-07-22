@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T17:35:33+00:00",
+  "generated_utc": "2026-07-22T17:43:01+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -720,8 +720,8 @@
     {
       "name": "zattoo_media_keys_20260722_r1.js",
       "path": "files/zattoo_media_keys_20260722_r1.js",
-      "size": 8593,
-      "sha256": "e64adfce5e1ab6b94655c5327f2f7529079a48970a14a0ba122a552aee2fd9ef"
+      "size": 8854,
+      "sha256": "a90693fa5775d5711c635e9eee744bf5608db527a1c3d7ed2696c65032ce6865"
     },
     {
       "name": "zattoo_navigation_20260722_r1.js",

@@ -157,10 +157,19 @@
 		return target;
 	}
 
-	function closePlayer(reason) {
-		suppressExpandUntil = Date.now() + 3000;
+	function closePlayer(reason, video) {
+		suppressExpandUntil = Date.now() + 10000;
 		collapsePlayer(reason);
-		window.history.back();
+		if (video) {
+			video.pause();
+			video.removeAttribute("src");
+			try {
+				video.load();
+			} catch (error) {
+				console.log("[Zattoo Media Keys] player detach failed " + error);
+			}
+		}
+		window.location.replace(window.location.origin + window.location.pathname);
 	}
 
 	function logAction(action, event, detail) {
@@ -187,7 +196,7 @@
 
 		if (isExit || isStop) {
 			if (!event.repeat) {
-				closePlayer(isStop ? "stop" : "exit");
+				closePlayer(isStop ? "stop" : "exit", video);
 				logAction(isStop ? "stop/close" : "exit/close", event);
 			}
 			consume(event);
