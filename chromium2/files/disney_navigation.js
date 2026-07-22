@@ -144,6 +144,16 @@
 			"box-sizing:border-box!important;",
 			"flex:0 0 180px!important;width:180px!important;",
 			"min-width:180px!important;max-width:180px!important;",
+			"height:auto!important;min-height:0!important;",
+			"max-height:none!important;align-self:flex-start!important;",
+			"}",
+			"[data-testid='set-shelf']{",
+			"align-items:flex-start!important;height:auto!important;",
+			"min-height:0!important;padding-bottom:32px!important;",
+			"}",
+			"[data-testid='set-shelf-item-shelf-pagination-spy']{",
+			"height:1px!important;min-height:1px!important;",
+			"max-height:1px!important;align-self:flex-start!important;",
 			"}",
 			"[data-testid='set-shelf-item']>[data-testid='set-item']{",
 			"box-sizing:border-box!important;width:180px!important;",
@@ -168,6 +178,92 @@
 			"}"
 		].join("");
 		(document.head || document.documentElement).appendChild(style);
+	}
+
+	function compactDisneyImageUrl(value) {
+		if (typeof value !== "string" ||
+				value.indexOf("disney.images.edge.bamgrid.com/ripcut-delivery/") === -1)
+			return value;
+		return value.replace(/([?&]width=)\d+/gi, function (match, prefix) {
+			return prefix + "320";
+		});
+	}
+
+	function compactImageAttribute(element, attribute) {
+		if (!element || typeof element.getAttribute !== "function")
+			return;
+		var value = element.getAttribute(attribute);
+		var compact = compactDisneyImageUrl(value);
+		if (compact !== value)
+			element.setAttribute(attribute, compact);
+	}
+
+	function compactImages(root) {
+		if (!root)
+			return;
+		if (root.nodeType === 1 && root.matches &&
+				root.matches("img[src],img[srcset],source[srcset]")) {
+			compactImageAttribute(root, "src");
+			compactImageAttribute(root, "srcset");
+		}
+		if (typeof root.querySelectorAll !== "function")
+			return;
+		var images = root.querySelectorAll("img[src],img[srcset],source[srcset]");
+		for (var index = 0; index < images.length; index++) {
+			compactImageAttribute(images[index], "src");
+			compactImageAttribute(images[index], "srcset");
+		}
+	}
+
+	function installCompactImageLoader() {
+		if (window.__openatvDisneyCompactImagesInstalled)
+			return;
+		window.__openatvDisneyCompactImagesInstalled = true;
+
+		["src", "srcset"].forEach(function (property) {
+			var descriptor = Object.getOwnPropertyDescriptor(
+				HTMLImageElement.prototype,
+				property
+			);
+			if (!descriptor || typeof descriptor.set !== "function" ||
+					typeof descriptor.get !== "function")
+				return;
+			try {
+				Object.defineProperty(HTMLImageElement.prototype, property, {
+					configurable: descriptor.configurable,
+					enumerable: descriptor.enumerable,
+					get: descriptor.get,
+					set: function (value) {
+						descriptor.set.call(this, compactDisneyImageUrl(value));
+					}
+				});
+			} catch (error) {
+				console.warn("[OpenATV Disney Navigation] image property hook failed", property);
+			}
+		});
+
+		compactImages(document);
+		window.__openatvDisneyCompactImageObserver = new MutationObserver(
+			function (mutations) {
+				for (var index = 0; index < mutations.length; index++) {
+					var mutation = mutations[index];
+					if (mutation.type === "attributes") {
+						compactImageAttribute(mutation.target, mutation.attributeName);
+						continue;
+					}
+					for (var childIndex = 0;
+							childIndex < mutation.addedNodes.length;
+							childIndex++)
+						compactImages(mutation.addedNodes[childIndex]);
+				}
+			}
+		);
+		window.__openatvDisneyCompactImageObserver.observe(
+			document.documentElement,
+			{childList: true, subtree: true, attributes: true,
+				attributeFilter: ["src", "srcset"]}
+		);
+		console.log("[OpenATV Disney Navigation] Disney image width limited to 320px");
 	}
 
 	var heroFreezeAttempts = 0;
@@ -314,7 +410,9 @@
 			event.stopPropagation();
 	}
 
-	function handleShelfNavigation(event) {
+	function handleDetailActionNavigation(event) {
+		if (window.location.pathname.indexOf("/browse/entity-") === -1)
+			return false;
 		var code = event.which || event.keyCode;
 		var key = event.key || event.code || "";
 		var step = 0;
@@ -326,12 +424,102 @@
 			return false;
 
 		var active = document.activeElement;
+		var selector = [
+			"[data-testid='playback-action-button']",
+			"[data-testid='add-to-watchlist-button']",
+			"[data-testid='remove-from-watchlist-button']"
+		].join(",");
+		if (!active || !active.matches || !active.matches(selector))
+			return false;
+
+		var controls = Array.prototype.filter.call(
+			document.querySelectorAll(selector),
+			visible
+		);
+		controls.sort(function (first, second) {
+			return first.getBoundingClientRect().left -
+				second.getBoundingClientRect().left;
+		});
+		var currentIndex = controls.indexOf(active);
+		var targetIndex = currentIndex + step;
+		if (currentIndex < 0 || targetIndex < 0 ||
+				targetIndex >= controls.length) {
+			consume(event);
+			return true;
+		}
+		focus(controls[targetIndex], "detail action", false);
+		consume(event);
+		return true;
+	}
+
+	function handleShelfNavigation(event) {
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		var step = 0;
+		var vertical = false;
+		if (key === "ArrowLeft" || code === 37)
+			step = -1;
+		else if (key === "ArrowRight" || code === 39)
+			step = 1;
+		else if (key === "ArrowUp" || code === 38) {
+			step = -1;
+			vertical = true;
+		} else if (key === "ArrowDown" || code === 40) {
+			step = 1;
+			vertical = true;
+		}
+		else
+			return false;
+
+		var active = document.activeElement;
 		var current = active && active.closest &&
 			active.closest("[data-testid='set-shelf-item']");
 		var shelf = current && current.parentElement;
 		if (!current || !shelf ||
 				shelf.getAttribute("data-testid") !== "set-shelf")
 			return false;
+
+		if (vertical) {
+			var currentSection = current.closest(
+				"section[data-testid='set-section']"
+			);
+			var sections = Array.prototype.filter.call(
+				document.querySelectorAll("section[data-testid='set-section']"),
+				function (section) {
+					return visible(section) &&
+						section.querySelector("[data-testid='set-shelf-item']");
+				}
+			);
+			var sectionIndex = sections.indexOf(currentSection);
+			var targetSection = sections[sectionIndex + step];
+			if (sectionIndex < 0 || !targetSection)
+				return false;
+
+			var candidates = Array.prototype.filter.call(
+				targetSection.querySelectorAll("[data-testid='set-shelf-item']"),
+				visible
+			);
+			if (!candidates.length)
+				return false;
+			var currentRect = current.getBoundingClientRect();
+			var currentCenter = currentRect.left + currentRect.width / 2;
+			candidates.sort(function (first, second) {
+				var firstRect = first.getBoundingClientRect();
+				var secondRect = second.getBoundingClientRect();
+				return Math.abs(firstRect.left + firstRect.width / 2 - currentCenter) -
+					Math.abs(secondRect.left + secondRect.width / 2 - currentCenter);
+			});
+			var verticalItem = candidates[0];
+			var verticalTarget = verticalItem.querySelector(
+				"a[data-testid='set-item'],button,[tabindex]"
+			);
+			if (!verticalTarget)
+				return false;
+			focus(verticalTarget, "shelf row item", false);
+			verticalItem.scrollIntoView({block: "center", inline: "nearest"});
+			consume(event);
+			return true;
+		}
 
 		var items = Array.prototype.filter.call(shelf.children, function (item) {
 			return item.getAttribute &&
@@ -411,6 +599,8 @@
 	function onKeyDown(event) {
 		if (handleOnboarding(event))
 			return;
+		if (handleDetailActionNavigation(event))
+			return;
 		if (handleShelfNavigation(event))
 			return;
 		if (!isDisneyWelcome() || modalOpen())
@@ -450,6 +640,7 @@
 
 	// Window capture runs before the generic document-level spatial handler.
 	installChromium92LoginCompatibility();
+	installCompactImageLoader();
 	installFrozenHeroStyle();
 	window.addEventListener("keydown", onKeyDown, true);
 	if (window.__openatvDisneyOnboardingTimer)
