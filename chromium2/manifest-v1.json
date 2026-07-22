@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T15:16:49+00:00",
+  "generated_utc": "2026-07-22T15:38:39+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -37,10 +37,11 @@
       "id": "dazn",
       "name": "DAZN",
       "description": "DAZN",
-      "url": "https://www.dazn.com/",
+      "url": "https://www.dazn.com/home",
       "mode": "Dazn",
       "requires_cdm": true,
-      "icon": "dazn_FHD.png"
+      "icon": "dazn_FHD.png",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
     },
     {
       "id": "prime-video",
@@ -364,7 +365,7 @@
     {
       "url": "https://www.dazn.com",
       "scripts": [
-        "dazn_navigation_20260722_r1.js",
+        "dazn_navigation_20260722_r2.js",
         "rcu_plugin.js"
       ],
       "styles": [
@@ -410,10 +411,10 @@
       "sha256": "b1f80afac738bd10c44f04f52bf9de81d6937e636f89f841d7c772c4459614c1"
     },
     {
-      "name": "dazn_navigation_20260722_r1.js",
-      "path": "files/dazn_navigation_20260722_r1.js",
-      "size": 4841,
-      "sha256": "c2f201108f9c457f23b9daad9da35173a904ec9e24a4f65fb5ffe65f7a4e288e"
+      "name": "dazn_navigation_20260722_r2.js",
+      "path": "files/dazn_navigation_20260722_r2.js",
+      "size": 11712,
+      "sha256": "a9d5dbb8c0082dbb5a428f86e3fbb683f50578903354343d2ed4e60a008aa3e5"
     },
     {
       "name": "digiturk_plugin.js",

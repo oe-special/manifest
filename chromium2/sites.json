@@ -34,10 +34,11 @@
       "id": "dazn",
       "name": "DAZN",
       "description": "DAZN",
-      "url": "https://www.dazn.com/",
+      "url": "https://www.dazn.com/home",
       "mode": "Dazn",
       "requires_cdm": true,
-      "icon": "dazn_FHD.png"
+      "icon": "dazn_FHD.png",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
     },
     {
       "id": "prime-video",
@@ -361,7 +362,7 @@
     {
       "url": "https://www.dazn.com",
       "scripts": [
-        "dazn_navigation_20260722_r1.js",
+        "dazn_navigation_20260722_r2.js",
         "rcu_plugin.js"
       ],
       "styles": [
