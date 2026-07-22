@@ -28,6 +28,7 @@
 	var KEY_MENU = 0x5D;
 	var lastCard = null;
 	var inHeader = false;
+	var activeDialog = null;
 
 	function consume(event) {
 		event.preventDefault();
@@ -78,6 +79,136 @@
 			target.isContentEditable || target.tagName === "INPUT" ||
 			target.tagName === "TEXTAREA" || target.tagName === "SELECT"
 		));
+	}
+
+	function detailsDialog() {
+		var dialogs = Array.prototype.slice.call(document.querySelectorAll(
+			"[data-soul='WINDOW'][role='dialog']"
+		)).filter(visible);
+		return dialogs.length ? dialogs[dialogs.length - 1] : null;
+	}
+
+	function inputOpen(event) {
+		var target = event && event.target;
+		return Boolean(document.querySelector(".crkeyboard")) || Boolean(target && (
+			target.isContentEditable || target.tagName === "INPUT" ||
+			target.tagName === "TEXTAREA" || target.tagName === "SELECT"
+		));
+	}
+
+	function dialogItems(dialog) {
+		var selector = [
+			"[data-soul='WINDOW_CONTROL_CLOSE']",
+			"[data-soul='BROADCAST_DETAILS_ALL_EPISODES']",
+			"[data-soul='TABS_ITEM']",
+			"[data-soul$='_OVERLAY_WATCH']",
+			"[data-soul$='_CONTROL_WATCH']",
+			"button",
+			"a[href]",
+			"[role='button']",
+			"[role='tab']",
+			"[tabindex]"
+		].join(",");
+		return Array.prototype.slice.call(dialog.querySelectorAll(selector))
+			.filter(visible).filter(function (element, index, elements) {
+				return elements.indexOf(element) === index &&
+					!element.closest("[data-soul='SLIDE_CONTROL_PREVIOUS']," +
+						"[data-soul='SLIDE_CONTROL_NEXT'],[data-soul='CLUSTER_CONTROL_NEXT']," +
+						"[data-soul='CLUSTER_CONTROL_PREVIOUS']");
+			});
+	}
+
+	function focusDialogItem(element) {
+		if (!focusElement(element, false)) {
+			return false;
+		}
+		inHeader = false;
+		try {
+			element.scrollIntoView({block: "center", inline: "nearest", behavior: "smooth"});
+		} catch (error) {
+			element.scrollIntoView(false);
+		}
+		return true;
+	}
+
+	function initialDialogItem(dialog) {
+		return dialog.querySelector("[data-soul='BROADCAST_DETAILS_ALL_EPISODES']") ||
+			dialog.querySelector("[data-soul$='_OVERLAY_WATCH']") ||
+			dialog.querySelector("[data-soul$='_CONTROL_WATCH']") ||
+			dialog.querySelector("[data-soul='WINDOW_CONTROL_CLOSE']") ||
+			dialogItems(dialog)[0];
+	}
+
+	function closeDialog(dialog) {
+		var close = dialog.querySelector("[data-soul='WINDOW_CONTROL_CLOSE']");
+		if (!close || !close.click) {
+			return false;
+		}
+		close.click();
+		activeDialog = null;
+		window.setTimeout(function () {
+			if (!detailsDialog() && lastCard && document.documentElement.contains(lastCard)) {
+				focusCard(lastCard);
+			}
+		}, 250);
+		return true;
+	}
+
+	function moveInDialog(dialog, directionX, directionY) {
+		var items = dialogItems(dialog);
+		if (!items.length) {
+			return false;
+		}
+		var active = document.activeElement;
+		if (items.indexOf(active) === -1) {
+			return focusDialogItem(initialDialogItem(dialog));
+		}
+		var source = active.getBoundingClientRect();
+		var sourceX = source.left + source.width / 2;
+		var sourceY = source.top + source.height / 2;
+		var best = null;
+		var bestScore = Infinity;
+		items.forEach(function (item) {
+			if (item === active) {
+				return;
+			}
+			var rect = item.getBoundingClientRect();
+			var deltaX = rect.left + rect.width / 2 - sourceX;
+			var deltaY = rect.top + rect.height / 2 - sourceY;
+			var primary = directionX ? deltaX * directionX : deltaY * directionY;
+			if (primary <= 4) {
+				return;
+			}
+			var secondary = directionX ? Math.abs(deltaY) : Math.abs(deltaX);
+			var score = primary * 1000 + secondary;
+			if (score < bestScore) {
+				best = item;
+				bestScore = score;
+			}
+		});
+		return best ? focusDialogItem(best) : true;
+	}
+
+	function handleDialogKey(event, dialog, code, name) {
+		if ([0x08, 0x1B, 0xA6, 0xA9, 0xB2].indexOf(code) !== -1 ||
+			name === "Escape" || name === "BrowserBack" || name === "MediaStop") {
+			return !event.repeat && closeDialog(dialog);
+		}
+		if (code === KEY_MENU || name === "ContextMenu" || name === "Menu") {
+			return !event.repeat && closeDialog(dialog);
+		}
+		if (code === 13) {
+			var active = document.activeElement;
+			if (dialog.contains(active) && active.click && !event.repeat) {
+				active.click();
+				return true;
+			}
+			return focusDialogItem(initialDialogItem(dialog));
+		}
+		return code === 37 ? moveInDialog(dialog, -1, 0) :
+			code === 39 ? moveInDialog(dialog, 1, 0) :
+			code === 38 ? moveInDialog(dialog, 0, -1) :
+			code === 40 ? moveInDialog(dialog, 0, 1) : false;
 	}
 
 	function playerOpen() {
@@ -355,12 +486,21 @@
 	}
 
 	function handleKey(event) {
-		if (event.altKey || event.ctrlKey || event.metaKey ||
-			modalOrInputOpen(event) || playerOpen()) {
+		if (event.altKey || event.ctrlKey || event.metaKey) {
 			return;
 		}
 		var code = event.which || event.keyCode;
 		var name = event.key || event.code || "";
+		var dialog = detailsDialog();
+		if (dialog) {
+			if (!inputOpen(event) && handleDialogKey(event, dialog, code, name)) {
+				consume(event);
+			}
+			return;
+		}
+		if (modalOrInputOpen(event) || playerOpen()) {
+			return;
+		}
 		if (code === KEY_MENU || name === "ContextMenu" || name === "Menu") {
 			if (!event.repeat && toggleHeader()) {
 				consume(event);
@@ -417,6 +557,21 @@
 		"}";
 	(document.head || document.documentElement).appendChild(style);
 	window.addEventListener("keydown", handleKey, true);
+	window.setInterval(function () {
+		var dialog = detailsDialog();
+		if (!dialog) {
+			activeDialog = null;
+			return;
+		}
+		if (dialog !== activeDialog) {
+			activeDialog = dialog;
+			window.setTimeout(function () {
+				if (detailsDialog() === dialog) {
+					focusDialogItem(initialDialogItem(dialog));
+				}
+			}, 80);
+		}
+	}, 250);
 	window.setTimeout(function () {
 		if (!modalOrInputOpen() && !playerOpen()) {
 			var card = selectedCard();
