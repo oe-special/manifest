@@ -37,6 +37,22 @@
 		return false;
 	}
 
+	function onboardingControls() {
+		var banner = document.querySelector("[data-testid='add-profile-banner']");
+		if (!visible(banner))
+			return null;
+		var close = banner.querySelector(
+			"[data-testid='onboardingbanner-closeIcon']"
+		);
+		var addProfile = banner.querySelector(
+			"[data-testid^='onboardingbanner-button-']"
+		);
+		return {
+			close: visible(close) ? close : null,
+			addProfile: visible(addProfile) ? addProfile : null
+		};
+	}
+
 	function text(element) {
 		return [
 			element.getAttribute("aria-label") || "",
@@ -149,7 +165,7 @@
 		return matches[0] || null;
 	}
 
-	function focus(element) {
+	function focus(element, label) {
 		if (!element)
 			return false;
 		var previous = document.querySelectorAll(".chromium-rcu-focus");
@@ -163,7 +179,8 @@
 		element.classList.add("chromium-rcu-focus");
 		element.scrollIntoView({block: "center", inline: "center"});
 		if (window.console && typeof window.console.log === "function")
-			window.console.log("[OpenATV Disney Navigation] focused login " +
+			window.console.log("[OpenATV Disney Navigation] focused " +
+				(label || "control") + " " +
 				"text=\"" + text(element).slice(0, 80) + "\"");
 		return true;
 	}
@@ -176,7 +193,52 @@
 			event.stopPropagation();
 	}
 
+	function handleOnboarding(event) {
+		var controls = onboardingControls();
+		if (!controls || !controls.close)
+			return false;
+
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		var active = document.activeElement;
+		var target = null;
+
+		if (key === "Escape" || key === "BrowserBack" ||
+				code === 27 || code === 166) {
+			controls.close.click();
+			consume(event);
+			return true;
+		}
+
+		if (key === "Enter" || code === 13) {
+			if (active === controls.close || active === controls.addProfile) {
+				active.click();
+			} else {
+				focus(controls.close, "onboarding close");
+			}
+			consume(event);
+			return true;
+		}
+
+		if (key === "ArrowRight" || key === "ArrowUp" ||
+				code === 39 || code === 38) {
+			target = controls.close;
+		} else if (key === "ArrowLeft" || key === "ArrowDown" ||
+				code === 37 || code === 40) {
+			target = controls.addProfile || controls.close;
+		}
+
+		if (!target)
+			return false;
+		focus(target, target === controls.close ?
+			"onboarding close" : "onboarding add profile");
+		consume(event);
+		return true;
+	}
+
 	function onKeyDown(event) {
+		if (handleOnboarding(event))
+			return;
 		if (!isDisneyWelcome() || modalOpen())
 			return;
 		var code = event.which || event.keyCode;
@@ -207,7 +269,7 @@
 			activeRect.right <= loginRect.left;
 
 		if (upFromHero || rightAcrossHeader) {
-			focus(login);
+			focus(login, "login");
 			consume(event);
 		}
 	}

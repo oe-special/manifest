@@ -346,7 +346,6 @@
     {
       "url": "https://www.disneyplus.com",
       "scripts": [
-        "disney_memory_20260722_r1.js",
         "disney_navigation.js",
         "rcu_plugin.js"
       ]
@@ -354,7 +353,6 @@
     {
       "url": "https://auth.disneyplus.com",
       "scripts": [
-        "disney_memory_20260722_r1.js",
         "disney_navigation.js",
         "rcu_plugin.js"
       ]
