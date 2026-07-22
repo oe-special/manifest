@@ -616,6 +616,31 @@
 		return true;
 	}
 
+	function handleDetailMenuShortcut(event) {
+		if (window.location.pathname.indexOf("/browse/entity-") === -1)
+			return false;
+		var code = event.which || event.keyCode;
+		var key = event.key || event.code || "";
+		if (code !== 0x5D && key !== "ContextMenu" && key !== "Menu")
+			return false;
+		var homes = document.querySelectorAll(
+			"a[data-testid='navigation-item-0-Startseite']"
+		);
+		var home = null;
+		for (var index = 0; index < homes.length; index++) {
+			if (visible(homes[index])) {
+				home = homes[index];
+				break;
+			}
+		}
+		if (home) {
+			window.scrollTo(0, 0);
+			focus(home, "main navigation", false);
+		}
+		consume(event);
+		return true;
+	}
+
 	function handleDetailContentNavigation(event) {
 		if (window.location.pathname.indexOf("/browse/entity-") === -1)
 			return false;
@@ -666,7 +691,27 @@
 				consume(event);
 				return true;
 			}
-			if (step < 0 || !cards.length) {
+			if (step < 0) {
+				var actions = Array.prototype.filter.call(
+					document.querySelectorAll([
+						"[data-testid='playback-action-button']",
+						"[data-testid='add-to-watchlist-button']",
+						"[data-testid='remove-from-watchlist-button']"
+					].join(",")),
+					visible
+				);
+				actions.sort(function (first, second) {
+					return first.getBoundingClientRect().left -
+						second.getBoundingClientRect().left;
+				});
+				if (actions.length) {
+					focus(actions[0], "detail action", false);
+					actions[0].scrollIntoView({block: "center", inline: "nearest"});
+				}
+				consume(event);
+				return true;
+			}
+			if (!cards.length) {
 				consume(event);
 				return true;
 			}
@@ -879,6 +924,8 @@
 		if (handleOnboarding(event))
 			return;
 		if (handleProfileMenu(event))
+			return;
+		if (handleDetailMenuShortcut(event))
 			return;
 		if (handleHeaderNavigation(event))
 			return;
