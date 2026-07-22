@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T14:57:30+00:00",
+  "generated_utc": "2026-07-22T15:05:34+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -364,6 +364,7 @@
     {
       "url": "https://www.dazn.com",
       "scripts": [
+        "dazn_navigation_20260722_r1.js",
         "rcu_plugin.js"
       ]
     },
@@ -404,6 +405,12 @@
       "path": "files/dazn_FHD.png",
       "size": 2645,
       "sha256": "b1f80afac738bd10c44f04f52bf9de81d6937e636f89f841d7c772c4459614c1"
+    },
+    {
+      "name": "dazn_navigation_20260722_r1.js",
+      "path": "files/dazn_navigation_20260722_r1.js",
+      "size": 3113,
+      "sha256": "c42a1bfe919aa66eaefb1ff1c01433eb54ec9ba120672b7faaaa0336c4201319"
     },
     {
       "name": "digiturk_plugin.js",
