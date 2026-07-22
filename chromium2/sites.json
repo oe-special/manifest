@@ -86,15 +86,6 @@
       "icon": "magentatv_FHD.png"
     },
     {
-      "id": "apple-tv-plus",
-      "name": "Apple TV+",
-      "description": "Apple TV+",
-      "url": "https://tv.apple.com/de",
-      "mode": "Chrome",
-      "requires_cdm": true,
-      "icon": "appletv_FHD.png"
-    },
-    {
       "id": "pluto-tv",
       "name": "Pluto TV",
       "description": "Pluto TV",
@@ -344,19 +335,6 @@
       "url": "https://accounts.login.idm.telekom.com",
       "scripts": [
         "magentatv_login_20260722_r1.js",
-        "rcu_plugin.js"
-      ]
-    },
-    {
-      "url": "https://tv.apple.com",
-      "scripts": [
-        "appletv_navigation_20260722_r1.js",
-        "rcu_plugin.js"
-      ]
-    },
-    {
-      "url": "https://idmsa.apple.com",
-      "scripts": [
         "rcu_plugin.js"
       ]
     },

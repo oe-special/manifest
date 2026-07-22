@@ -2,7 +2,7 @@
   "schema": 1,
   "product": "chromium2-web-controls",
   "channel": "stable",
-  "generated_utc": "2026-07-22T06:20:16+00:00",
+  "generated_utc": "2026-07-22T07:27:48+00:00",
   "debug_script": "rcu_debug.js",
   "portals": [
     {
@@ -87,15 +87,6 @@
       "mode": "Chrome",
       "requires_cdm": true,
       "icon": "magentatv_FHD.png"
-    },
-    {
-      "id": "apple-tv-plus",
-      "name": "Apple TV+",
-      "description": "Apple TV+",
-      "url": "https://tv.apple.com/de",
-      "mode": "Chrome",
-      "requires_cdm": true,
-      "icon": "appletv_FHD.png"
     },
     {
       "id": "pluto-tv",
@@ -351,19 +342,6 @@
       ]
     },
     {
-      "url": "https://tv.apple.com",
-      "scripts": [
-        "appletv_navigation_20260722_r1.js",
-        "rcu_plugin.js"
-      ]
-    },
-    {
-      "url": "https://idmsa.apple.com",
-      "scripts": [
-        "rcu_plugin.js"
-      ]
-    },
-    {
       "url": "https://www.disneyplus.com",
       "scripts": [
         "disney_navigation.js",
@@ -391,18 +369,6 @@
     }
   ],
   "files": [
-    {
-      "name": "appletv_FHD.png",
-      "path": "files/appletv_FHD.png",
-      "size": 4219,
-      "sha256": "fac62672853c23b882f45df13bea9cc7f6e1d3560ba61ebf488d8f076e1afcd4"
-    },
-    {
-      "name": "appletv_navigation_20260722_r1.js",
-      "path": "files/appletv_navigation_20260722_r1.js",
-      "size": 8614,
-      "sha256": "bdd0682346c941dfb2fbd1f7dea7e461dd7e471b63e7e039f11ffcb5fe6cf0d9"
-    },
     {
       "name": "bein_plugin.js",
       "path": "files/bein_plugin.js",
