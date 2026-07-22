@@ -67,9 +67,18 @@ directly through browser history without first changing the media element
 state.
 
 The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
-Prime Video, HBO Max, Paramount+, RTL+, MagentaTV, Apple TV+ and Pluto TV.
+Prime Video, HBO Max, Paramount+, RTL+, MagentaTV and Pluto TV.
 Only YouTube TV is exposed without Widevine. New services start with the
 generic RCU adapter; Pluto TV retains its dedicated compatibility adapter.
+`plutotv_consent_20260722_r1.js` recognizes Pluto TV's current OneTrust
+consent panel. It keeps arrow and OK key handling inside the visible panel,
+initially focuses Accept, and prevents the live-TV guide behind the panel from
+moving while consent is open.
+`plutotv_navigation_20260722_r1.js` replaces the obsolete top-level routing
+of the legacy Pluto adapter. The home page navigates between its hero actions
+and visual content rails, On Demand separates its category column from movie
+rails, and Live TV treats each guide row as a stable channel/program grid.
+The Dream Menu key toggles between Pluto's current header and page content.
 `paramount_navigation.js` replaces Paramount+'s obsolete
 `/[region]/account/flow/.../action/login/` target (also accepted without a
 region), which returns HTTP 403, with the

@@ -223,7 +223,9 @@
     {
       "url": "https://pluto.tv",
       "scripts": [
-        "plutotv_plugin.js"
+        "plutotv_plugin.js",
+        "plutotv_consent_20260722_r1.js",
+        "plutotv_navigation_20260722_r1.js"
       ]
     },
     {
