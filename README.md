@@ -144,7 +144,10 @@ key, then restart Chromium.
 ### Debug a website
 
 Enable **RCU debug log** in Chromium Setup. The receiver writes key codes and
-DOM focus information to `/tmp/chromium-rcu.log`. It does not log input
+DOM focus information persistently to `/home/root/logs/chromium-rcu.log`.
+`/tmp/chromium-rcu.log` points to the same file while the receiver is running.
+The log is appended across browser starts and rotated at 8 MiB; the previous
+log remains available as `chromium-rcu.log.1`. It does not log input
 values, cookies, query strings, or passwords.
 
 No Widevine/CDM binaries, credentials, cookies, or receiver-specific settings
