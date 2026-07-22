@@ -13,7 +13,8 @@
 		"[data-soul='TEASER_EXTERNAL']",
 		"[data-soul='TEASER_CHANNEL']",
 		"[data-soul='TEASER_EPISODE']",
-		"[data-soul='TEASER_RECORDING']"
+		"[data-soul='TEASER_RECORDING']",
+		"[data-soul='TEASER_VOD_SERIES']"
 	].join(",");
 	var GROUP_SELECTOR = [
 		"[data-soul='ELEMENT_MARQUEE']",
@@ -29,6 +30,8 @@
 	var lastCard = null;
 	var inHeader = false;
 	var activeDialog = null;
+	var lastGuideItem = null;
+	var guideWasOpen = false;
 
 	function consume(event) {
 		event.preventDefault();
@@ -216,6 +219,154 @@
 			var rect = video.getBoundingClientRect();
 			return visible(video) && rect.width > 300 && rect.height > 160;
 		});
+	}
+
+	function guideOpen() {
+		return /\/guide(?:\/|$)/.test(window.location.pathname) &&
+			Boolean(document.querySelector("[data-soul='GUIDE_CONTENT']"));
+	}
+
+	function guideRows() {
+		return Array.prototype.slice.call(document.querySelectorAll(
+			"[data-soul='GUIDE_CHANNEL_PROGRAMS']"
+		)).map(function (row) {
+			var programs = Array.prototype.slice.call(row.querySelectorAll("a[href]"))
+				.filter(visible).sort(function (left, right) {
+					return left.getBoundingClientRect().left - right.getBoundingClientRect().left;
+				});
+			return {element: row, programs: programs};
+		}).filter(function (row) {
+			return row.programs.length > 0;
+		}).sort(function (left, right) {
+			return left.element.getBoundingClientRect().top -
+				right.element.getBoundingClientRect().top;
+		});
+	}
+
+	function guideProgramCenter(program) {
+		var rect = program.getBoundingClientRect();
+		return window.pageXOffset + rect.left + rect.width / 2;
+	}
+
+	function guideProgramForX(row, x) {
+		var containing = null;
+		var best = null;
+		var bestDistance = Infinity;
+		row.programs.forEach(function (program) {
+			var rect = program.getBoundingClientRect();
+			var left = window.pageXOffset + rect.left;
+			var right = left + rect.width;
+			if (x >= left && x <= right) {
+				containing = program;
+			}
+			var distance = Math.abs(left + rect.width / 2 - x);
+			if (distance < bestDistance) {
+				best = program;
+				bestDistance = distance;
+			}
+		});
+		return containing || best;
+	}
+
+	function guideCurrentProgram(row) {
+		var indicator = document.querySelector("[data-soul='GUIDE_TIMELINE_NOW_INDICATOR']");
+		var x = indicator && visible(indicator) ?
+			window.pageXOffset + indicator.getBoundingClientRect().left :
+			window.pageXOffset + window.innerWidth / 2;
+		return guideProgramForX(row, x);
+	}
+
+	function focusGuideProgram(program) {
+		if (!focusElement(program, false)) {
+			return false;
+		}
+		lastGuideItem = program;
+		inHeader = false;
+		var rect = program.getBoundingClientRect();
+		var left = window.pageXOffset;
+		var top = window.pageYOffset;
+		if (rect.left < 170) {
+			left = Math.max(0, left + rect.left - 180);
+		} else if (rect.right > window.innerWidth - 24) {
+			left = Math.max(0, left + rect.right - window.innerWidth + 24);
+		}
+		if (rect.top < 188) {
+			top = Math.max(0, top + rect.top - 198);
+		} else if (rect.bottom > window.innerHeight - 18) {
+			top = Math.max(0, top + rect.bottom - window.innerHeight + 18);
+		}
+		if (left !== window.pageXOffset || top !== window.pageYOffset) {
+			window.scrollTo({left: left, top: top, behavior: "auto"});
+		}
+		return true;
+	}
+
+	function selectedGuideProgram() {
+		var active = document.activeElement;
+		if (active && active.matches &&
+			active.matches("[data-soul='GUIDE_CHANNEL_PROGRAMS'] a[href]")) {
+			return active;
+		}
+		if (lastGuideItem && document.documentElement.contains(lastGuideItem) &&
+			visible(lastGuideItem)) {
+			return lastGuideItem;
+		}
+		return null;
+	}
+
+	function focusInitialGuideProgram() {
+		var rows = guideRows();
+		if (!rows.length) {
+			return false;
+		}
+		return focusGuideProgram(guideCurrentProgram(rows[0]));
+	}
+
+	function moveGuideHorizontal(program, direction) {
+		var row = program.closest("[data-soul='GUIDE_CHANNEL_PROGRAMS']");
+		if (!row) {
+			return false;
+		}
+		var programs = Array.prototype.slice.call(row.querySelectorAll("a[href]"))
+			.filter(visible).sort(function (left, right) {
+				return left.getBoundingClientRect().left - right.getBoundingClientRect().left;
+			});
+		var index = programs.indexOf(program);
+		var target = programs[index + direction];
+		return target ? focusGuideProgram(target) : true;
+	}
+
+	function moveGuideVertical(program, direction) {
+		var rows = guideRows();
+		var row = program.closest("[data-soul='GUIDE_CHANNEL_PROGRAMS']");
+		var index = rows.map(function (entry) { return entry.element; }).indexOf(row);
+		if (index < 0) {
+			return focusInitialGuideProgram();
+		}
+		var targetIndex = index + direction;
+		if (targetIndex < 0 || targetIndex >= rows.length) {
+			return true;
+		}
+		return focusGuideProgram(guideProgramForX(
+			rows[targetIndex], guideProgramCenter(program)
+		));
+	}
+
+	function handleGuideKey(event, code) {
+		var program = selectedGuideProgram();
+		if (!program) {
+			return focusInitialGuideProgram();
+		}
+		if (code === 13) {
+			if (!event.repeat && program.click) {
+				program.click();
+			}
+			return true;
+		}
+		return code === 37 ? moveGuideHorizontal(program, -1) :
+			code === 39 ? moveGuideHorizontal(program, 1) :
+			code === 38 ? moveGuideVertical(program, -1) :
+			code === 40 ? moveGuideVertical(program, 1) : false;
 	}
 
 	function clearFocus() {
@@ -451,6 +602,10 @@
 	}
 
 	function moveHeaderDown() {
+		if (guideOpen()) {
+			return selectedGuideProgram() ?
+				focusGuideProgram(selectedGuideProgram()) : focusInitialGuideProgram();
+		}
 		var list = groups();
 		if (!list.length) {
 			return false;
@@ -479,6 +634,10 @@
 
 	function toggleHeader() {
 		if (inHeader || headerItems().indexOf(document.activeElement) !== -1) {
+			if (guideOpen()) {
+				return selectedGuideProgram() ?
+					focusGuideProgram(selectedGuideProgram()) : focusInitialGuideProgram();
+			}
 			return focusCard(lastCard || selectedCard());
 		}
 		var header = headerItems();
@@ -525,6 +684,13 @@
 			return;
 		}
 
+		if (guideOpen()) {
+			if (handleGuideKey(event, code)) {
+				consume(event);
+			}
+			return;
+		}
+
 		var card = selectedCard();
 		if (!card) {
 			var list = groups();
@@ -561,9 +727,7 @@
 		var dialog = detailsDialog();
 		if (!dialog) {
 			activeDialog = null;
-			return;
-		}
-		if (dialog !== activeDialog) {
+		} else if (dialog !== activeDialog) {
 			activeDialog = dialog;
 			window.setTimeout(function () {
 				if (detailsDialog() === dialog) {
@@ -571,12 +735,22 @@
 				}
 			}, 80);
 		}
+		var currentGuide = guideOpen();
+		if (currentGuide && !dialog && !playerOpen() && !selectedGuideProgram() &&
+			headerItems().indexOf(document.activeElement) === -1) {
+			focusInitialGuideProgram();
+		}
+		guideWasOpen = currentGuide;
 	}, 250);
 	window.setTimeout(function () {
 		if (!modalOrInputOpen() && !playerOpen()) {
-			var card = selectedCard();
-			if (card) {
-				focusCard(card);
+			if (guideOpen()) {
+				focusInitialGuideProgram();
+			} else {
+				var card = selectedCard();
+				if (card) {
+					focusCard(card);
+				}
 			}
 		}
 	}, 900);
