@@ -165,7 +165,7 @@
 		return matches[0] || null;
 	}
 
-	function focus(element, label) {
+	function focus(element, label, scroll) {
 		if (!element)
 			return false;
 		var previous = document.querySelectorAll(".chromium-rcu-focus");
@@ -177,7 +177,16 @@
 			element.focus();
 		}
 		element.classList.add("chromium-rcu-focus");
-		element.scrollIntoView({block: "center", inline: "center"});
+		// Chromium 92 does not always paint an outline around a focused SVG.
+		// Mark its container as well so the Disney close icon is visible.
+		if (element.tagName && element.tagName.toLowerCase() === "svg" &&
+				element.parentElement)
+			element.parentElement.classList.add("chromium-rcu-focus");
+		// The onboarding banner is fixed over a very tall home page. Calling
+		// scrollIntoView() here scrolls the page behind it and makes Disney load
+		// thousands of off-screen images, which can stall the Amlogic renderer.
+		if (scroll !== false)
+			element.scrollIntoView({block: "center", inline: "center"});
 		if (window.console && typeof window.console.log === "function")
 			window.console.log("[OpenATV Disney Navigation] focused " +
 				(label || "control") + " " +
@@ -204,7 +213,7 @@
 		var target = null;
 
 		if (key === "Escape" || key === "BrowserBack" ||
-				code === 27 || code === 166) {
+				key === "Backspace" || code === 8 || code === 27 || code === 166) {
 			controls.close.click();
 			consume(event);
 			return true;
@@ -214,7 +223,7 @@
 			if (active === controls.close || active === controls.addProfile) {
 				active.click();
 			} else {
-				focus(controls.close, "onboarding close");
+				focus(controls.close, "onboarding close", false);
 			}
 			consume(event);
 			return true;
@@ -231,7 +240,7 @@
 		if (!target)
 			return false;
 		focus(target, target === controls.close ?
-			"onboarding close" : "onboarding add profile");
+			"onboarding close" : "onboarding add profile", false);
 		consume(event);
 		return true;
 	}
