@@ -15,6 +15,12 @@
             /(^|\.)tv\.apple\.com$/i.test(window.location.hostname);
     }
 
+    function commerceLoginFrame() {
+        return window.top !== window &&
+            /(^|\.)tv\.apple\.com$/i.test(window.location.hostname) &&
+            /^\/includes\/commerce\/navigator/i.test(window.location.pathname);
+    }
+
     function rendered(element) {
         if (!element || element.disabled ||
                 element.getAttribute("aria-hidden") === "true") {
@@ -53,6 +59,100 @@
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
+    }
+
+    function loginFields() {
+        return Array.prototype.filter.call(
+            document.querySelectorAll(
+                "#accountName,input[type='email'],input[type='text']," +
+                    "input[type='password'],input[type='tel']"
+            ),
+            function (element) {
+                return !element.closest(".crkeyboard") && rendered(element) &&
+                    !element.readOnly;
+            }
+        );
+    }
+
+    function selectedLoginField() {
+        var fields = loginFields();
+        return Array.prototype.find.call(fields, function (element) {
+            return element.classList.contains("chromium-rcu-focus");
+        }) || (fields.indexOf(document.activeElement) >= 0 ?
+            document.activeElement : null);
+    }
+
+    function keyboardOpen() {
+        return !!document.querySelector(".crkeyboard");
+    }
+
+    function openLoginKeyboard(field, reason) {
+        if (!rendered(field) || typeof window.showKeyboard !== "function") {
+            return false;
+        }
+        if (keyboardOpen()) {
+            return true;
+        }
+        try {
+            if (!field.classList.contains("chromium-rcu-focus")) {
+                field.classList.add("chromium-rcu-focus");
+            }
+            field.focus({preventScroll: true});
+            window.showKeyboard(field);
+            console.log(
+                "[Apple TV Login] keyboard field=" +
+                    String(field.id || field.type || field.tagName) +
+                    " reason=" + reason
+            );
+            return true;
+        } catch (error) {
+            console.log("[Apple TV Login] keyboard error=" + error);
+            return false;
+        }
+    }
+
+    function bindLoginFields() {
+        loginFields().forEach(function (field) {
+            if (!field.__chromiumAppleKeyboardBound) {
+                field.__chromiumAppleKeyboardBound = true;
+                field.addEventListener("click", function () {
+                    window.setTimeout(function () {
+                        openLoginKeyboard(field, "click");
+                    }, 0);
+                }, true);
+                field.addEventListener("focus", function () {
+                    window.setTimeout(function () {
+                        if (document.activeElement === field) {
+                            openLoginKeyboard(field, "focus");
+                        }
+                    }, 0);
+                }, true);
+            }
+
+            if (!field.classList.contains("chromium-rcu-focus")) {
+                field.__chromiumAppleKeyboardAutoOpened = false;
+            } else if (!field.__chromiumAppleKeyboardAutoOpened &&
+                    !keyboardOpen()) {
+                if (openLoginKeyboard(field, "rcu-focus")) {
+                    field.__chromiumAppleKeyboardAutoOpened = true;
+                }
+            }
+        });
+    }
+
+    function onLoginKeyDown(event) {
+        var key = event.key || "";
+        var code = event.which || event.keyCode;
+        var field;
+
+        if ((key !== "Enter" && code !== 13) || keyboardOpen()) {
+            return;
+        }
+        field = selectedLoginField();
+        if (field && openLoginKeyboard(field, "ok")) {
+            field.__chromiumAppleKeyboardAutoOpened = true;
+            consume(event);
+        }
     }
 
     function clearFocus() {
@@ -135,6 +235,18 @@
         if (handled) {
             consume(event);
         }
+    }
+
+    if (commerceLoginFrame()) {
+        window.addEventListener("keydown", onLoginKeyDown, true);
+        bindLoginFields();
+        window.setInterval(bindLoginFields, 350);
+        console.log("[Apple TV Login] installed 20260722-r1");
+        return;
+    }
+
+    if (!appleTvPage()) {
+        return;
     }
 
     var style = document.createElement("style");
