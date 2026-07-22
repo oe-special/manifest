@@ -66,7 +66,7 @@ them to Enigma2's system volume. Stop and Exit leave the HBO Max SPA player
 directly through browser history without first changing the media element
 state.
 
-The verified portal catalog contains YouTube TV, Netflix, Disney+, DAZN,
+The verified portal catalog contains YouTube TV, Netflix, Disney+, Zattoo,
 Prime Video, HBO Max, Paramount+, RTL+, MagentaTV and Pluto TV.
 Only YouTube TV is exposed without Widevine. New services start with the
 generic RCU adapter; Pluto TV retains its dedicated compatibility adapter.

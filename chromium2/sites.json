@@ -31,13 +31,13 @@
       "icon": "disney_FHD.png"
     },
     {
-      "id": "dazn",
-      "name": "DAZN",
-      "description": "DAZN",
-      "url": "https://www.dazn.com/home",
-      "mode": "Dazn",
+      "id": "zattoo",
+      "name": "Zattoo",
+      "description": "Zattoo Live-TV",
+      "url": "https://zattoo.com/login",
+      "mode": "Chrome",
       "requires_cdm": true,
-      "icon": "dazn_FHD.png"
+      "icon": "zattoo_FHD.png"
     },
     {
       "id": "prime-video",
@@ -359,9 +359,8 @@
       ]
     },
     {
-      "url": "https://www.dazn.com",
+      "url": "https://zattoo.com",
       "scripts": [
-        "dazn_navigation_20260722_r2.js",
         "rcu_plugin.js"
       ],
       "styles": [
