@@ -79,6 +79,9 @@ of the legacy Pluto adapter. The home page navigates between its hero actions
 and visual content rails, On Demand separates its category column from movie
 rails, and Live TV treats each guide row as a stable channel/program grid.
 The Dream Menu key toggles between Pluto's current header and page content.
+
+`zattoo_layout_20260722_r1.js` hides Zattoo's fixed 300-pixel advertising
+sidebar and releases the reserved width for the header and main content.
 `paramount_navigation.js` replaces Paramount+'s obsolete
 `/[region]/account/flow/.../action/login/` target (also accepted without a
 region), which returns HTTP 403, with the
